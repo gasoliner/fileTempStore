@@ -11,7 +11,7 @@ public interface FileMapper {
 
     int deleteByExample(FileExample example);
 
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(String fileid);
 
     int insert(File record);
 
@@ -19,7 +19,7 @@ public interface FileMapper {
 
     List<File> selectByExample(FileExample example);
 
-    File selectByPrimaryKey(Integer id);
+    File selectByPrimaryKey(String fileid);
 
     int updateByExampleSelective(@Param("record") File record, @Param("example") FileExample example);
 

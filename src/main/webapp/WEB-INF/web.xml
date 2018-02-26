@@ -67,7 +67,7 @@
     <param-value>classpath:spring/applicationContext-*</param-value>
   </context-param>
   <listener>
-    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    <listener-class>cn.fts.listener.WebContextListener</listener-class>
   </listener>
 
   <!--获取Request和Session-->

@@ -2,11 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.fts.mapper.FileMapper">
   <resultMap id="BaseResultMap" type="cn.fts.po.File">
-    <id column="id" jdbcType="INTEGER" property="id" />
+    <id column="fileid" jdbcType="VARCHAR" property="fileid" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="start" jdbcType="TIMESTAMP" property="start" />
     <result column="keep" jdbcType="INTEGER" property="keep" />
-    <result column="url" jdbcType="VARCHAR" property="url" />
     <result column="access" jdbcType="INTEGER" property="access" />
     <result column="authoricode" jdbcType="VARCHAR" property="authoricode" />
   </resultMap>
@@ -69,7 +68,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, name, start, keep, url, access, authoricode
+    fileid, name, start, keep, access, authoricode
   </sql>
   <select id="selectByExample" parameterType="cn.fts.po.FileExample" resultMap="BaseResultMap">
     select
@@ -85,15 +84,15 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from file
-    where id = #{id,jdbcType=INTEGER}
+    where fileid = #{fileid,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from file
-    where id = #{id,jdbcType=INTEGER}
+    where fileid = #{fileid,jdbcType=VARCHAR}
   </delete>
   <delete id="deleteByExample" parameterType="cn.fts.po.FileExample">
     delete from file
@@ -102,18 +101,18 @@
     </if>
   </delete>
   <insert id="insert" parameterType="cn.fts.po.File">
-    insert into file (id, name, start, 
-      keep, url, access, 
-      authoricode)
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{start,jdbcType=TIMESTAMP}, 
-      #{keep,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{access,jdbcType=INTEGER}, 
-      #{authoricode,jdbcType=VARCHAR})
+    insert into file (fileid, name, start, 
+      keep, access, authoricode
+      )
+    values (#{fileid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{start,jdbcType=TIMESTAMP}, 
+      #{keep,jdbcType=INTEGER}, #{access,jdbcType=INTEGER}, #{authoricode,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="cn.fts.po.File">
     insert into file
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
+      <if test="fileid != null">
+        fileid,
       </if>
       <if test="name != null">
         name,
@@ -124,9 +123,6 @@
       <if test="keep != null">
         keep,
       </if>
-      <if test="url != null">
-        url,
-      </if>
       <if test="access != null">
         access,
       </if>
@@ -135,8 +131,8 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
+      <if test="fileid != null">
+        #{fileid,jdbcType=VARCHAR},
       </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
@@ -146,9 +142,6 @@
       </if>
       <if test="keep != null">
         #{keep,jdbcType=INTEGER},
-      </if>
-      <if test="url != null">
-        #{url,jdbcType=VARCHAR},
       </if>
       <if test="access != null">
         #{access,jdbcType=INTEGER},
@@ -167,8 +160,8 @@
   <update id="updateByExampleSelective" parameterType="map">
     update file
     <set>
-      <if test="record.id != null">
-        id = #{record.id,jdbcType=INTEGER},
+      <if test="record.fileid != null">
+        fileid = #{record.fileid,jdbcType=VARCHAR},
       </if>
       <if test="record.name != null">
         name = #{record.name,jdbcType=VARCHAR},
@@ -178,9 +171,6 @@
       </if>
       <if test="record.keep != null">
         keep = #{record.keep,jdbcType=INTEGER},
-      </if>
-      <if test="record.url != null">
-        url = #{record.url,jdbcType=VARCHAR},
       </if>
       <if test="record.access != null">
         access = #{record.access,jdbcType=INTEGER},
@@ -195,11 +185,10 @@
   </update>
   <update id="updateByExample" parameterType="map">
     update file
-    set id = #{record.id,jdbcType=INTEGER},
+    set fileid = #{record.fileid,jdbcType=VARCHAR},
       name = #{record.name,jdbcType=VARCHAR},
       start = #{record.start,jdbcType=TIMESTAMP},
       keep = #{record.keep,jdbcType=INTEGER},
-      url = #{record.url,jdbcType=VARCHAR},
       access = #{record.access,jdbcType=INTEGER},
       authoricode = #{record.authoricode,jdbcType=VARCHAR}
     <if test="_parameter != null">
@@ -218,9 +207,6 @@
       <if test="keep != null">
         keep = #{keep,jdbcType=INTEGER},
       </if>
-      <if test="url != null">
-        url = #{url,jdbcType=VARCHAR},
-      </if>
       <if test="access != null">
         access = #{access,jdbcType=INTEGER},
       </if>
@@ -228,16 +214,15 @@
         authoricode = #{authoricode,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where fileid = #{fileid,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="cn.fts.po.File">
     update file
     set name = #{name,jdbcType=VARCHAR},
       start = #{start,jdbcType=TIMESTAMP},
       keep = #{keep,jdbcType=INTEGER},
-      url = #{url,jdbcType=VARCHAR},
       access = #{access,jdbcType=INTEGER},
       authoricode = #{authoricode,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
+    where fileid = #{fileid,jdbcType=VARCHAR}
   </update>
 </mapper>

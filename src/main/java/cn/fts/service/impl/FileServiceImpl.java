@@ -2,6 +2,8 @@ package cn.fts.service.impl;
 
 import cn.fts.mapper.FileMapper;
 import cn.fts.mapper.UserMapper;
+import cn.fts.po.File;
+import cn.fts.po.FileExample;
 import cn.fts.service.FileService;
 import cn.fts.service.UserService;
 import cn.fts.utils.Constant;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 @Service("fileService")
 public class FileServiceImpl implements FileService {
@@ -28,7 +31,7 @@ public class FileServiceImpl implements FileService {
             return false;
         }
         int time = file.getDay()*24*60 + file.getHour()*60 + file.getMinute();
-        if (time > Constant.getInt("keep")) {
+        if (time > Constant.getInt("keepMax")) {
             return false;
         }
         if (file.getName() == null) {
@@ -40,7 +43,7 @@ public class FileServiceImpl implements FileService {
             file.setAuthoricode("123");
         }
         try {
-            file.setUrl(FastDFSClient.uploadFile(FileUtils.InputStreamToFile(file.getSrcFile().getInputStream()),file.getName()));
+            file.setFileid(FastDFSClient.uploadFile(FileUtils.InputStreamToFile(file.getSrcFile().getInputStream()),file.getName()));
         } catch (IOException e) {
             e.printStackTrace();
             return false;
@@ -50,5 +53,28 @@ public class FileServiceImpl implements FileService {
 
     public int insert(VoFile file) {
         return fileMapper.insert(file);
+    }
+
+    public List<File> select() {
+        return fileMapper.selectByExample(new FileExample());
+    }
+
+    public File selectByPrimaryKey(String id) {
+        return fileMapper.selectByPrimaryKey(id);
+    }
+
+    public int deleteBatchByPrimaryKey(List<String> idList) {
+        FileExample example = new FileExample();
+        for (String id:
+                idList) {
+            if (deleteFileEntry(id) >= 0) {
+                example.or().andFileidEqualTo(id);
+            }
+        }
+        return fileMapper.deleteByExample(example);
+    }
+
+    private int deleteFileEntry(String id) {
+        return FastDFSClient.deleteFile(id);
     }
 }

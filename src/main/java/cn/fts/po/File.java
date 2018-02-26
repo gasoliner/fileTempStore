@@ -3,7 +3,7 @@ package cn.fts.po;
 import java.util.Date;
 
 public class File {
-    private Integer id;
+    private String fileid;
 
     private String name;
 
@@ -11,18 +11,16 @@ public class File {
 
     private Integer keep;
 
-    private String url;
-
     private Integer access;
 
     private String authoricode;
 
-    public Integer getId() {
-        return id;
+    public String getFileid() {
+        return fileid;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setFileid(String fileid) {
+        this.fileid = fileid == null ? null : fileid.trim();
     }
 
     public String getName() {
@@ -49,14 +47,6 @@ public class File {
         this.keep = keep;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url == null ? null : url.trim();
-    }
-
     public Integer getAccess() {
         return access;
     }
@@ -71,18 +61,5 @@ public class File {
 
     public void setAuthoricode(String authoricode) {
         this.authoricode = authoricode == null ? null : authoricode.trim();
-    }
-
-    @Override
-    public String toString() {
-        return "File{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", start=" + start +
-                ", keep=" + keep +
-                ", url='" + url + '\'' +
-                ", access=" + access +
-                ", authoricode='" + authoricode + '\'' +
-                '}';
     }
 }
