@@ -24,10 +24,11 @@ public class FastDFSClient {
             if (trackerServer == null) {
                 throw new IllegalStateException("trackerClient.getConnection return null");
             }
-            StorageServer storageServer = trackerClient.getStoreStorage(trackerServer);
-            if (storageServer == null) {
-                throw new IllegalStateException("trackerClient.getStoreStorage return null");
-            }
+//            StorageServer storageServer = trackerClient.getStoreStorage(trackerServer);
+            StorageServer storageServer = null;
+//            if (storageServer == null) {
+//                throw new IllegalStateException("trackerClient.getStoreStorage return null");
+//            }
             storageClient1 = new StorageClient1(trackerServer, storageServer);
         } catch (Exception e) {
             e.printStackTrace();
@@ -52,8 +53,8 @@ public class FastDFSClient {
                     NameValuePair pair = new NameValuePair(name, value);
                     nameValuePairs[index++] = pair;
                 }
-                return storageClient1.upload_file1(buff, FileUtils.getExtension(fileName), nameValuePairs);
             }
+            return storageClient1.upload_file1(buff, FileUtils.getExtension(fileName), nameValuePairs);
         } catch (Exception e) {
             e.printStackTrace();
         }
