@@ -11,9 +11,4 @@ public class FileUtils {
         return fileName.substring(fileName.lastIndexOf(".")+1);
     }
 
-    public static File InputStreamToFile(InputStream inputStream) throws IOException {
-        File file = new File("");
-        org.apache.commons.io.FileUtils.copyInputStreamToFile(inputStream,file);
-        return file;
-    }
 }

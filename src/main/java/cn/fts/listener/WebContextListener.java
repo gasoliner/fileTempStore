@@ -11,7 +11,7 @@ import javax.servlet.ServletContextEvent;
  */
 public class WebContextListener extends ContextLoaderListener {
 
-    private TimeTask task;
+//    private TimeTask task;
 
     @Override
     public void contextInitialized(ServletContextEvent event) {
@@ -20,13 +20,14 @@ public class WebContextListener extends ContextLoaderListener {
         sb.append("\r\n       欢迎使用 "+ Constant.getConfig("productName") + "  ^_^\r\n");
         sb.append("\r\n======================================================================\r\n");
         System.out.println(sb.toString());
-        task = new TimeTask();
-        task.start();
+//        task = new TimeTask();
+//        task.start();
         super.contextInitialized(event);
+
     }
 
-    @Override
-    public void contextDestroyed(ServletContextEvent event) {
-        task.cancel();
-    }
+//    @Override
+//    public void contextDestroyed(ServletContextEvent event) {
+//        task.cancel();
+//    }
 }

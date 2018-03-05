@@ -17,4 +17,7 @@ public interface FileService {
 
     int deleteBatchByPrimaryKey(List<String> idList);
 
+    List<VoFile> list();
+
+    int deleteByPrimaryKey(String id);
 }

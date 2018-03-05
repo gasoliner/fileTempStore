@@ -1,5 +1,6 @@
 package cn.fts.utils;
 
+import cn.fts.service.FileService;
 import org.apache.commons.io.FileUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -139,10 +140,19 @@ public class PageUtil {
         outputStream.close();
     }
 
+    public static void settingResponseForDownLoad(String fileName,HttpServletResponse response) {
+        response.reset();
+        String mimeType = URLConnection.guessContentTypeFromName(fileName);
+        response.setContentType(mimeType);
+        response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+        return;
+    }
+
     public static String getFileNameByFilePath(String filepath){
         String string[] = filepath.split("\\\\");
         return string[string.length-1];
     }
+
 }
 
 

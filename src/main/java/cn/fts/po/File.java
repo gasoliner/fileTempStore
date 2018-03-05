@@ -62,4 +62,16 @@ public class File {
     public void setAuthoricode(String authoricode) {
         this.authoricode = authoricode == null ? null : authoricode.trim();
     }
+
+    @Override
+    public String toString() {
+        return "File{" +
+                "fileid='" + fileid + '\'' +
+                ", name='" + name + '\'' +
+                ", start=" + start +
+                ", keep=" + keep +
+                ", access=" + access +
+                ", authoricode='" + authoricode + '\'' +
+                '}';
+    }
 }

@@ -10,7 +10,27 @@ public class VoFile extends File {
 
     private Integer minute;
 
+    private Integer remaining;
+
+    private String action;
+
     private CommonsMultipartFile srcFile;
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public Integer getRemaining() {
+        return remaining;
+    }
+
+    public void setRemaining(Integer remaining) {
+        this.remaining = remaining;
+    }
 
     public CommonsMultipartFile getSrcFile() {
         return srcFile;

@@ -33,6 +33,9 @@
     <!--注解扫描器，扫描controller包-->
     <context:component-scan base-package="cn.fts.controller"/>
 
+    <!--spring 工具类-->
+    <bean id="springContextUtil" class="cn.fts.utils.SpringContextUtil"/>
+
     <!--文件上传配置-->
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <property name="defaultEncoding" value="utf-8"></property>

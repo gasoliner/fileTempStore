@@ -70,4 +70,17 @@ public class User {
     public void setLocked(Integer locked) {
         this.locked = locked;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "account='" + account + '\'' +
+                ", password='" + password + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", max=" + max +
+                ", used=" + used +
+                ", defaultcode='" + defaultcode + '\'' +
+                ", locked=" + locked +
+                '}';
+    }
 }

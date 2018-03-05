@@ -27,7 +27,8 @@ public class TimeTask {
     public void start() {
         int scanningInterval = Constant.getInt("scanningInterval");
         timer = new Timer("文件过期检查",true);
-        timer.schedule(new FileCheckTask(),DELAY_2MINUTE,PERIOD_MINUTE*scanningInterval);
+//        timer.schedule(new FileCheckTask(),DELAY_2MINUTE,PERIOD_MINUTE*scanningInterval);
+        timer.schedule(new FileCheckTask(),NO_DELAY,PERIOD_MINUTE*scanningInterval);
     }
 
     public void cancel() {

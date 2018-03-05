@@ -35,13 +35,26 @@ public class FastDFSClient {
         }
     }
 
+    public static String uploadFile(InputStream inputStream,String fileName) {
+        return uploadFile(inputStream,fileName,null);
+    }
+
     public static String uploadFile(File file, String fileName) {
         return uploadFile(file, fileName, null);
     }
 
-    private static String uploadFile(File file, String fileName, Map<String, String> metaList) {
+    public static String uploadFile(File file, String fileName, Map<String, String> metaList) {
         try {
-            byte[] buff = IOUtils.toByteArray(new FileInputStream(file));
+            return uploadFile(new FileInputStream(file),fileName,metaList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String uploadFile(InputStream inputStream,String fileName, Map<String, String> metaList) {
+        try {
+            byte[] buff = IOUtils.toByteArray(inputStream);
             NameValuePair[] nameValuePairs = null;
             if (metaList != null) {
                 nameValuePairs = new NameValuePair[metaList.size()];
@@ -103,18 +116,25 @@ public class FastDFSClient {
      * @return
      */
     public static int downloadFile(String fileId, File outFile) {
-        FileOutputStream fos = null;
+        try {
+            return downloadFile(fileId,new FileOutputStream(outFile));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public static int downloadFile(String fileId, OutputStream outputStream) {
         try {
             byte[] content = storageClient1.download_file1(fileId);
-            fos = new FileOutputStream(outFile);
-            IOUtils.copy(new ByteArrayInputStream(content),fos);
+            IOUtils.copy(new ByteArrayInputStream(content),outputStream);
             return 0;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (fos != null) {
+            if (outputStream != null) {
                 try {
-                    fos.close();
+                    outputStream.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
