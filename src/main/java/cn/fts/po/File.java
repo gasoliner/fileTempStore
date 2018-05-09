@@ -1,5 +1,7 @@
 package cn.fts.po;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.util.Date;
 
 public class File {
@@ -7,6 +9,9 @@ public class File {
 
     private String name;
 
+    private Integer size;
+
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date start;
 
     private Integer keep;
@@ -14,6 +19,8 @@ public class File {
     private Integer access;
 
     private String authoricode;
+
+    private String uploadby;
 
     public String getFileid() {
         return fileid;
@@ -29,6 +36,14 @@ public class File {
 
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
+    }
+
+    public Integer getSize() {
+        return size;
+    }
+
+    public void setSize(Integer size) {
+        this.size = size;
     }
 
     public Date getStart() {
@@ -63,15 +78,11 @@ public class File {
         this.authoricode = authoricode == null ? null : authoricode.trim();
     }
 
-    @Override
-    public String toString() {
-        return "File{" +
-                "fileid='" + fileid + '\'' +
-                ", name='" + name + '\'' +
-                ", start=" + start +
-                ", keep=" + keep +
-                ", access=" + access +
-                ", authoricode='" + authoricode + '\'' +
-                '}';
+    public String getUploadby() {
+        return uploadby;
+    }
+
+    public void setUploadby(String uploadby) {
+        this.uploadby = uploadby == null ? null : uploadby.trim();
     }
 }

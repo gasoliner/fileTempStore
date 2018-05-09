@@ -4,11 +4,15 @@ import cn.fts.po.File;
 import cn.fts.service.FileService;
 import cn.fts.utils.FastDFSClient;
 import cn.fts.utils.PageUtil;
+import cn.fts.utils.RequestUtils;
+import cn.fts.vo.ResponseData;
 import cn.fts.vo.VoFile;
+import com.alibaba.fastjson.JSON;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,14 +20,17 @@ import java.io.IOException;
 import java.util.List;
 
 @Controller
-@RequestMapping("/file")
+@RequestMapping(value = "/file",produces = {"application/json;charset=UTF-8"})
 public class FileController {
+
+    private static final Logger logger = Logger.getLogger(FileController.class);
 
     @Autowired
     FileService fileService;
 
     @RequestMapping("/upload")
-    public String upload(VoFile file) {
+    @ResponseBody
+    public String upload(HttpServletRequest request,VoFile file) {
         /***
          * 检查文件大小
          * 检查时长是否合法
@@ -32,29 +39,32 @@ public class FileController {
          * 上传file
          * 保存到 DB
          */
-//        System.out.println("file1 = " + file);
+        boolean result = false;
         if (fileService.checkVoFile(file)) {
-//            System.out.println("file2 = " + file);
             try {
                 fileService.insert(file);
-                return "common/successful";
+                result = true;
             } catch (Exception e) {
-                return "common/failed";
             }
         }
-        return "common/failed";
+        if (result) {
+            log("upload","successful",request,file,"");
+            return JSON.toJSONString(new ResponseData<>(0,"操作成功",null));
+        } else {
+            log("upload","failed",request,file,"");
+            return JSON.toJSONString(new ResponseData<>(1,"操作失败",null));
+        }
     }
 
     @RequestMapping("/list")
-    public String list(HttpServletRequest request) {
+    @ResponseBody
+    public String list() {
         List<VoFile> viewList = fileService.list();
-//        modelAndView.addObject("viewList",viewList);
         if (viewList == null && viewList.size() == 0) {
             viewList = null;
         }
-        request.getSession().setAttribute("viewList",viewList);
-        System.out.println("fileController list()\t" + viewList);
-        return "index";
+        ResponseData<List<VoFile>> data = new ResponseData(0,"查询成功",viewList);
+        return JSON.toJSONString(data);
     }
 
     @RequestMapping("/download")
@@ -72,10 +82,17 @@ public class FileController {
 //            允许下载文件
             PageUtil.settingResponseForDownLoad(file.getName(),response);
             FastDFSClient.downloadFile(fileId,response.getOutputStream());
+            log("download","success",request,file,"");
         }
     }
 
-
-
+    private void log(String action,String isSuccess,HttpServletRequest request,File file,String another) {
+        logger.debug("fileController\t" + action +"\t" + isSuccess + "\tip=" + RequestUtils.getRemoteAddr(request)
+                + "\tfileName=" + file.getName()
+                + "\tfileKeep=" + file.getKeep()
+                + "\tfileAccess=" + file.getAccess()
+                + "\tfileId=" + file.getFileid()
+                + "\tfileSize=" + file.getSize() + another);
+    }
 
 }

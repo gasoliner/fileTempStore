@@ -21,14 +21,13 @@ public class UIController {
     private TimeTask timeTask;
 
     @RequestMapping("/")
-    public void showIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public String showIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (!timeTaskIsRunning) {
             timeTask = new TimeTask();
             timeTask.start();
             timeTaskIsRunning = true;
         }
-        request.getRequestDispatcher("/file/list").forward(request,response);
-        return;
+        return "index";
     }
 
     @RequestMapping("/{page}")

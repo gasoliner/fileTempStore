@@ -87,7 +87,7 @@ public class Constant {
 
 
     public static Boolean getBoolean(String key, Boolean defaultValue) {
-        String value = getConfig(key);
+        String value = getConfig(key );
         if (value != null) {
             value = value.toLowerCase().trim();
             if ("true".equals(value))

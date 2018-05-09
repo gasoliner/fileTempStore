@@ -37,11 +37,11 @@ public class FileServiceImpl implements FileService {
             return false;
         }
         if (StringUtils.isEmpty(file.getName())) {
-//            System.out.println("file.getSrcFile().getOriginalFilename()\t" + file.getSrcFile().getOriginalFilename());
             file.setName(file.getSrcFile().getOriginalFilename());
         }
         file.setKeep(time);
         file.setStart(new Date());
+        file.setSize((int) (file.getSrcFile().getSize()/1024));
         if (file.getAccess() == 2 && StringUtils.isEmpty(file.getAuthoricode())) {
             file.setAuthoricode("123");
         }
@@ -67,7 +67,7 @@ public class FileServiceImpl implements FileService {
     }
 
     public int deleteBatchByPrimaryKey(List<String> idList) {
-        System.out.println(TimeUtils.dateToString() + "deleteBatchByPrimaryKey idList \t" + idList);
+//        System.out.println(TimeUtils.dateToString() + "deleteBatchByPrimaryKey idList \t" + idList);
         FileExample example = new FileExample();
         for (String id:
                 idList) {
@@ -108,17 +108,19 @@ public class FileServiceImpl implements FileService {
 
     private List<VoFile> vo(List<File> fileList) {
         List<VoFile> voFileList = new ArrayList<>();
-        Date date = new Date();
         for (File file:
                 fileList) {
             VoFile voFile = new VoFile();
             voFile.setName(file.getName());
-            long timeDifference = file.getStart().getTime() + file.getKeep()*60*1000 - date.getTime();
+            voFile.setSize(file.getSize());
+            voFile.setStart(file.getStart());
+            long expirationTime = file.getStart().getTime() + file.getKeep()*60*1000;
+            long timeDifference = expirationTime - new Date().getTime();
             if (timeDifference < 0) {
                 deleteByPrimaryKey(file.getFileid());
                 continue;
             } else {
-                voFile.setRemaining((int) (timeDifference / 60 / 1000));
+                voFile.setExpirationTime(new Date(expirationTime));
             }
             voFile.setAccess(file.getAccess());
             String action;

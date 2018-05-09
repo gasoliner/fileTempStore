@@ -4,10 +4,12 @@
   <resultMap id="BaseResultMap" type="cn.fts.po.File">
     <id column="fileid" jdbcType="VARCHAR" property="fileid" />
     <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="size" jdbcType="INTEGER" property="size" />
     <result column="start" jdbcType="TIMESTAMP" property="start" />
     <result column="keep" jdbcType="INTEGER" property="keep" />
     <result column="access" jdbcType="INTEGER" property="access" />
     <result column="authoricode" jdbcType="VARCHAR" property="authoricode" />
+    <result column="uploadby" jdbcType="VARCHAR" property="uploadby" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -68,7 +70,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    fileid, name, start, keep, access, authoricode
+    fileid, name, size, start, keep, access, authoricode, uploadby
   </sql>
   <select id="selectByExample" parameterType="cn.fts.po.FileExample" resultMap="BaseResultMap">
     select
@@ -101,12 +103,12 @@
     </if>
   </delete>
   <insert id="insert" parameterType="cn.fts.po.File">
-    insert into file (fileid, name, start, 
-      keep, access, authoricode
-      )
-    values (#{fileid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{start,jdbcType=TIMESTAMP}, 
-      #{keep,jdbcType=INTEGER}, #{access,jdbcType=INTEGER}, #{authoricode,jdbcType=VARCHAR}
-      )
+    insert into file (fileid, name, size, 
+      start, keep, access, 
+      authoricode, uploadby)
+    values (#{fileid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{size,jdbcType=INTEGER}, 
+      #{start,jdbcType=TIMESTAMP}, #{keep,jdbcType=INTEGER}, #{access,jdbcType=INTEGER}, 
+      #{authoricode,jdbcType=VARCHAR}, #{uploadby,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.fts.po.File">
     insert into file
@@ -116,6 +118,9 @@
       </if>
       <if test="name != null">
         name,
+      </if>
+      <if test="size != null">
+        size,
       </if>
       <if test="start != null">
         start,
@@ -129,6 +134,9 @@
       <if test="authoricode != null">
         authoricode,
       </if>
+      <if test="uploadby != null">
+        uploadby,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="fileid != null">
@@ -136,6 +144,9 @@
       </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null">
+        #{size,jdbcType=INTEGER},
       </if>
       <if test="start != null">
         #{start,jdbcType=TIMESTAMP},
@@ -148,6 +159,9 @@
       </if>
       <if test="authoricode != null">
         #{authoricode,jdbcType=VARCHAR},
+      </if>
+      <if test="uploadby != null">
+        #{uploadby,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -166,6 +180,9 @@
       <if test="record.name != null">
         name = #{record.name,jdbcType=VARCHAR},
       </if>
+      <if test="record.size != null">
+        size = #{record.size,jdbcType=INTEGER},
+      </if>
       <if test="record.start != null">
         start = #{record.start,jdbcType=TIMESTAMP},
       </if>
@@ -178,6 +195,9 @@
       <if test="record.authoricode != null">
         authoricode = #{record.authoricode,jdbcType=VARCHAR},
       </if>
+      <if test="record.uploadby != null">
+        uploadby = #{record.uploadby,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -187,10 +207,12 @@
     update file
     set fileid = #{record.fileid,jdbcType=VARCHAR},
       name = #{record.name,jdbcType=VARCHAR},
+      size = #{record.size,jdbcType=INTEGER},
       start = #{record.start,jdbcType=TIMESTAMP},
       keep = #{record.keep,jdbcType=INTEGER},
       access = #{record.access,jdbcType=INTEGER},
-      authoricode = #{record.authoricode,jdbcType=VARCHAR}
+      authoricode = #{record.authoricode,jdbcType=VARCHAR},
+      uploadby = #{record.uploadby,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -200,6 +222,9 @@
     <set>
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null">
+        size = #{size,jdbcType=INTEGER},
       </if>
       <if test="start != null">
         start = #{start,jdbcType=TIMESTAMP},
@@ -213,16 +238,21 @@
       <if test="authoricode != null">
         authoricode = #{authoricode,jdbcType=VARCHAR},
       </if>
+      <if test="uploadby != null">
+        uploadby = #{uploadby,jdbcType=VARCHAR},
+      </if>
     </set>
     where fileid = #{fileid,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="cn.fts.po.File">
     update file
     set name = #{name,jdbcType=VARCHAR},
+      size = #{size,jdbcType=INTEGER},
       start = #{start,jdbcType=TIMESTAMP},
       keep = #{keep,jdbcType=INTEGER},
       access = #{access,jdbcType=INTEGER},
-      authoricode = #{authoricode,jdbcType=VARCHAR}
+      authoricode = #{authoricode,jdbcType=VARCHAR},
+      uploadby = #{uploadby,jdbcType=VARCHAR}
     where fileid = #{fileid,jdbcType=VARCHAR}
   </update>
 </mapper>

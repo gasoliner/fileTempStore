@@ -245,6 +245,66 @@ public class FileExample {
             return (Criteria) this;
         }
 
+        public Criteria andSizeIsNull() {
+            addCriterion("size is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSizeIsNotNull() {
+            addCriterion("size is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSizeEqualTo(Integer value) {
+            addCriterion("size =", value, "size");
+            return (Criteria) this;
+        }
+
+        public Criteria andSizeNotEqualTo(Integer value) {
+            addCriterion("size <>", value, "size");
+            return (Criteria) this;
+        }
+
+        public Criteria andSizeGreaterThan(Integer value) {
+            addCriterion("size >", value, "size");
+            return (Criteria) this;
+        }
+
+        public Criteria andSizeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("size >=", value, "size");
+            return (Criteria) this;
+        }
+
+        public Criteria andSizeLessThan(Integer value) {
+            addCriterion("size <", value, "size");
+            return (Criteria) this;
+        }
+
+        public Criteria andSizeLessThanOrEqualTo(Integer value) {
+            addCriterion("size <=", value, "size");
+            return (Criteria) this;
+        }
+
+        public Criteria andSizeIn(List<Integer> values) {
+            addCriterion("size in", values, "size");
+            return (Criteria) this;
+        }
+
+        public Criteria andSizeNotIn(List<Integer> values) {
+            addCriterion("size not in", values, "size");
+            return (Criteria) this;
+        }
+
+        public Criteria andSizeBetween(Integer value1, Integer value2) {
+            addCriterion("size between", value1, value2, "size");
+            return (Criteria) this;
+        }
+
+        public Criteria andSizeNotBetween(Integer value1, Integer value2) {
+            addCriterion("size not between", value1, value2, "size");
+            return (Criteria) this;
+        }
+
         public Criteria andStartIsNull() {
             addCriterion("start is null");
             return (Criteria) this;
@@ -492,6 +552,76 @@ public class FileExample {
 
         public Criteria andAuthoricodeNotBetween(String value1, String value2) {
             addCriterion("authoricode not between", value1, value2, "authoricode");
+            return (Criteria) this;
+        }
+
+        public Criteria andUploadbyIsNull() {
+            addCriterion("uploadby is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUploadbyIsNotNull() {
+            addCriterion("uploadby is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUploadbyEqualTo(String value) {
+            addCriterion("uploadby =", value, "uploadby");
+            return (Criteria) this;
+        }
+
+        public Criteria andUploadbyNotEqualTo(String value) {
+            addCriterion("uploadby <>", value, "uploadby");
+            return (Criteria) this;
+        }
+
+        public Criteria andUploadbyGreaterThan(String value) {
+            addCriterion("uploadby >", value, "uploadby");
+            return (Criteria) this;
+        }
+
+        public Criteria andUploadbyGreaterThanOrEqualTo(String value) {
+            addCriterion("uploadby >=", value, "uploadby");
+            return (Criteria) this;
+        }
+
+        public Criteria andUploadbyLessThan(String value) {
+            addCriterion("uploadby <", value, "uploadby");
+            return (Criteria) this;
+        }
+
+        public Criteria andUploadbyLessThanOrEqualTo(String value) {
+            addCriterion("uploadby <=", value, "uploadby");
+            return (Criteria) this;
+        }
+
+        public Criteria andUploadbyLike(String value) {
+            addCriterion("uploadby like", value, "uploadby");
+            return (Criteria) this;
+        }
+
+        public Criteria andUploadbyNotLike(String value) {
+            addCriterion("uploadby not like", value, "uploadby");
+            return (Criteria) this;
+        }
+
+        public Criteria andUploadbyIn(List<String> values) {
+            addCriterion("uploadby in", values, "uploadby");
+            return (Criteria) this;
+        }
+
+        public Criteria andUploadbyNotIn(List<String> values) {
+            addCriterion("uploadby not in", values, "uploadby");
+            return (Criteria) this;
+        }
+
+        public Criteria andUploadbyBetween(String value1, String value2) {
+            addCriterion("uploadby between", value1, value2, "uploadby");
+            return (Criteria) this;
+        }
+
+        public Criteria andUploadbyNotBetween(String value1, String value2) {
+            addCriterion("uploadby not between", value1, value2, "uploadby");
             return (Criteria) this;
         }
     }

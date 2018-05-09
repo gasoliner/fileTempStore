@@ -1,7 +1,10 @@
 package cn.fts.vo;
 
 import cn.fts.po.File;
+import com.alibaba.fastjson.annotation.JSONField;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
+import java.util.Date;
 
 public class VoFile extends File {
     private Integer day;
@@ -10,7 +13,8 @@ public class VoFile extends File {
 
     private Integer minute;
 
-    private Integer remaining;
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    private Date expirationTime;
 
     private String action;
 
@@ -24,12 +28,12 @@ public class VoFile extends File {
         this.action = action;
     }
 
-    public Integer getRemaining() {
-        return remaining;
+    public Date getExpirationTime() {
+        return expirationTime;
     }
 
-    public void setRemaining(Integer remaining) {
-        this.remaining = remaining;
+    public void setExpirationTime(Date expirationTime) {
+        this.expirationTime = expirationTime;
     }
 
     public CommonsMultipartFile getSrcFile() {
@@ -64,5 +68,15 @@ public class VoFile extends File {
         this.minute = minute;
     }
 
-
+    @Override
+    public String toString() {
+        return "VoFile{" +
+                "day=" + day +
+                ", hour=" + hour +
+                ", minute=" + minute +
+                ", expirationTime=" + expirationTime +
+                ", action='" + action + '\'' +
+                ", srcFile=" + srcFile +
+                '}';
+    }
 }

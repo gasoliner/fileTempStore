@@ -84,3 +84,12 @@ td {
     color: #ff061a;
 }
 
+
+/*BootStrap form-control small输入框*/
+.form-control-small {
+    position: relative;
+    z-index: 2;
+    float: left;
+    width: 10%;
+    margin-bottom: 0;
+}

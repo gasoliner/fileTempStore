@@ -31,6 +31,51 @@ function downloadFile(inputAuthCodeId,fileId) {
     }
 }
 
+function refreshFileTab() {
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        url: "file/list",
+        success: function (msg) {
+            if (msg.state == 0) {
+                var str = "";
+                var data = msg.data;
+                for (i in data) {
+                    str += "<tr>" +
+                        "<td>" + data[i].name + "</td>" +
+                        "<td>" + data[i].size + "</td>" +
+                        "<td>" + data[i].start + "</td>" +
+                        "<td>" + data[i].expirationTime + "</td>" +
+                        "<td>" + data[i].access + "</td>" +
+                        "<td>" + data[i].action + "</td>" +
+                        "</tr>";
+                }
+                $("#fileTbody").html(str);
+            }
+        },
+        error: function () {
+            alert("查询失败")
+        }
+    });
+}
+
+function uploadFile() {
+    var option = {
+        url : '/file/upload',
+        type : 'POST',
+        dataType : 'json',
+        // headers : {"ClientCallMode" : "ajax"}, //添加请求头部
+        success :function (response,statusText) {
+            alert(statusText);
+            // response = $.parseJSON(response);
+            // alert(response.message);
+        }
+        // error:showResponse()
+    };
+    $("#uploadFileForm").ajaxSubmit(option);
+    $("#uploadFileForm").resetForm();
+    refreshFileTab();
+}
 
 
 

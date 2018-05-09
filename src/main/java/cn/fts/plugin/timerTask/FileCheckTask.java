@@ -2,15 +2,9 @@ package cn.fts.plugin.timerTask;
 
 import cn.fts.po.File;
 import cn.fts.service.FileService;
-import cn.fts.utils.PageUtil;
 import cn.fts.utils.SpringContextUtil;
-import cn.fts.utils.TimeUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.support.XmlWebApplicationContext;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,8 +17,8 @@ import java.util.TimerTask;
  *  当前时间，比对是否超期，如果超期，将其删除，发送通知给对应用户，记录日志。
  */
 
-@Component
 public class FileCheckTask extends TimerTask {
+    private static final Logger logger = Logger.getLogger(FileCheckTask.class);
     private static boolean isRunning = false;
     private int checkCount = 1;
 
@@ -33,8 +27,6 @@ public class FileCheckTask extends TimerTask {
     public FileCheckTask() {
         fileService = SpringContextUtil.getBean("fileService");
     }
-//    @Autowired
-//    NoticeService noticeService
 
     public void run() {
         if (!isRunning) {
@@ -45,7 +37,7 @@ public class FileCheckTask extends TimerTask {
             if (overdueIdList != null && overdueIdList.size() > 0) {
                 fileService.deleteBatchByPrimaryKey(overdueIdList);
             }
-            System.out.println(TimeUtils.dateToString() + " 第 " + checkCount + " 次检查，被删除的文件ID：\t" + overdueIdList);
+            logger.debug("fileCheckTask\tcheckCount=" + checkCount + "\tdeletedFilesID:" + overdueIdList);
             isRunning = false;
         } else {
         }
@@ -58,7 +50,6 @@ public class FileCheckTask extends TimerTask {
                 fileList) {
             Date start = file.getStart();
             if ((start.getTime()+file.getKeep()*60*1000) < now.getTime()) {
-//                System.out.println("overDue file id :\t" + file.getFileid() + "\tstart:\t" + start.getTime() + "\tkeep:\t" + file.getKeep() + "\tstart + keep:\t" + (start.getTime()+file.getKeep()*60*1000) + "\tnow:\t" + now.getTime());
                 overdueIdList.add(file.getFileid());
             }
         }
