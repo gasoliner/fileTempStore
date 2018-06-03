@@ -3,6 +3,7 @@ package cn.fts.controller;
 import cn.fts.po.File;
 import cn.fts.service.FileService;
 import cn.fts.utils.FastDFSClient;
+import cn.fts.utils.FileUtils;
 import cn.fts.utils.PageUtil;
 import cn.fts.utils.RequestUtils;
 import cn.fts.vo.ResponseData;
@@ -27,6 +28,19 @@ public class FileController {
 
     @Autowired
     FileService fileService;
+
+    @RequestMapping("/fastText")
+    @ResponseBody
+    public String fastText(VoFile file,String content,HttpServletRequest request) {
+        try {
+            java.io.File textFile = FileUtils.generateNewText("E://temp.txt",content);
+            System.out.println(textFile.getName());
+//            file.setSrcFile();
+        } catch (Exception e) {
+
+        }
+        return "";
+    }
 
     @RequestMapping("/upload")
     @ResponseBody
