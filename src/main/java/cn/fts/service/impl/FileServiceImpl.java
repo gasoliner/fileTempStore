@@ -28,6 +28,7 @@ public class FileServiceImpl implements FileService {
     @Autowired
     UserService userService;
 
+
     public boolean checkVoFile(VoFile file) {
         if (file.getSrcFile().getSize() == 0||file.getSrcFile().getSize() > (Constant.getInt("singleFileMax")*1024)) {
             return false;

@@ -75,11 +75,6 @@ public class PageUtil {
         outputStream.close();
     }
 
-    public static boolean deleteFile(String filePath) throws IOException {
-        File file = new File(filePath);
-        return file.delete();
-    }
-
     public static String setVoNoticeActionByUUID(String uuid) {
         return "<a href = \"#\" onclick=\"showNotice('" + uuid + "')\">查看</a>";
     }

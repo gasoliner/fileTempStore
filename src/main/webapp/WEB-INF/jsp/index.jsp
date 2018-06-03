@@ -24,61 +24,68 @@
                                 data-target="#fastTextDiv"><i class="fa fa-heart"></i> 快速文本</button>
                     </h4>
                 </div>
-                <div id="fastTextDiv" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <form class="form-horizontal style-form" method="get">
-                            <div class="form-group">
-                                <label class="col-sm-2 col-sm-2 control-label">Default</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control">
+                    <div id="fastTextDiv" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <%--<form id="fastTextForm" class="form-horizontal style-form" enctype="multipart/form-data">--%>
+                            <form id="fastTextForm" class="form-horizontal style-form" >
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-sm-2 control-label">文件名</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" name="name"  class="form-control" placeholder="默认为源文件名">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 col-sm-2 control-label">Help text</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control">
-                                    <span class="help-block">A block of help text that breaks onto a new line and may extend beyond one line.</span>
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-sm-2 control-label">文本内容</label>
+                                    <div class="col-sm-10">
+                                        <textarea style="resize: none;" name="content" class="form-control" rows="10"></textarea>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 col-sm-2 control-label">Rounder</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control round-form">
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-sm-2 control-label">输入文件保存时长（最长10天）</label>
+                                    <div class="col-sm-10">
+                                        <div>
+                                            <input type="text"  class="form-control" name="day" value="0">天
+                                        </div>
+                                        <div>
+                                            <input type="text"  class="form-control" name="hour" value="0">小时
+                                        </div>
+                                        <div>
+                                            <input type="text"  class="form-control" name="minute" value="0">分钟
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 col-sm-2 control-label">Input focus</label>
-                                <div class="col-sm-10">
-                                    <input class="form-control" id="focusedInput" type="text" value="This is focused...">
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-sm-2 control-label">访问权限</label>
+                                    <div class="col-sm-10">
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="access" value="1">
+                                                所有人可读
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="access" value="2" checked>
+                                                授权码可读
+                                            </label>
+                                        </div>
+                                        <input type="text" name="authoricode"  class="form-control" placeholder="输入授权码，默认为缺省值">
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="access" value="3">
+                                                私人可读
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 col-sm-2 control-label">Disabled</label>
-                                <div class="col-sm-10">
-                                    <input class="form-control" id="disabledInput" type="text" placeholder="Disabled input here..." disabled>
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-sm-2 control-label">
+                                        <button type="button" onclick="fastText()" class="btn" ><i class="fa fa-heart"></i> 提交</button>
+                                    </label>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 col-sm-2 control-label">Placeholder</label>
-                                <div class="col-sm-10">
-                                    <input type="text"  class="form-control" placeholder="placeholder">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 col-sm-2 control-label">Password</label>
-                                <div class="col-sm-10">
-                                    <input type="password"  class="form-control" placeholder="">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-lg-2 col-sm-2 control-label">Static control</label>
-                                <div class="col-lg-10">
-                                    <p class="form-control-static">email@example.com</p>
-                                </div>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     </div>
-                </div>
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
