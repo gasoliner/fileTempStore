@@ -30,28 +30,28 @@ public class FileServiceImpl implements FileService {
 
 
     public boolean checkVoFile(VoFile file) {
-        if (file.getSrcFile().getSize() == 0||file.getSrcFile().getSize() > (Constant.getInt("singleFileMax")*1024)) {
-            return false;
-        }
-        int time = file.getDay()*24*60 + file.getHour()*60 + file.getMinute();
-        if (time > Constant.getInt("keepMax")) {
-            return false;
-        }
-        if (StringUtils.isEmpty(file.getName())) {
-            file.setName(file.getSrcFile().getOriginalFilename());
-        }
-        file.setKeep(time);
-        file.setStart(new Date());
-        file.setSize((int) (file.getSrcFile().getSize()/1024));
-        if (file.getAccess() == 2 && StringUtils.isEmpty(file.getAuthoricode())) {
-            file.setAuthoricode("123");
-        }
-        try {
-            file.setFileid(FastDFSClient.uploadFile(file.getSrcFile().getInputStream(),file.getName()));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
+//        if (file.getSrcFile().getSize() == 0||file.getSrcFile().getSize() > (Constant.getInt("singleFileMax")*1024)) {
+//            return false;
+//        }
+//        int time = file.getDay()*24*60 + file.getHour()*60 + file.getMinute();
+//        if (time > Constant.getInt("keepMax")) {
+//            return false;
+//        }
+//        if (StringUtils.isEmpty(file.getName())) {
+//            file.setName(file.getSrcFile().getOriginalFilename());
+//        }
+//        file.setKeep(time);
+//        file.setStart(new Date());
+//        file.setSize((int) (file.getSrcFile().getSize()/1024));
+//        if (file.getAccess() == 2 && StringUtils.isEmpty(file.getAuthoricode())) {
+//            file.setAuthoricode("123");
+//        }
+//        try {
+//            file.setFileid(FastDFSClient.uploadFile(file.getSrcFile().getInputStream(),file.getName()));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
         return true;
     }
 
@@ -105,6 +105,50 @@ public class FileServiceImpl implements FileService {
             return fileMapper.deleteByPrimaryKey(id);
         }
         return 0;
+    }
+
+    @Override
+    public void check(VoFile file) throws Exception {
+        if ("fastText".equals(file.getCurrentFileKind())) {
+            if (file.getjFile().length() == 0||file.getjFile().length() > (Constant.getInt("singleFileMax")*1024)) {
+                throw new Exception("文件大小（" + file.getjFile().length() + "）非法，当前规定大小 = " + Constant.getInt("singleFileMax")*1024);
+            }
+        } else if ("uploadFile".equals(file.getCurrentFileKind())) {
+            if (file.getSrcFile().getSize() == 0||file.getSrcFile().getSize() > (Constant.getInt("singleFileMax")*1024)) {
+                throw new Exception("文件大小（" + file.getSrcFile().getSize() + "）非法，当前规定大小 = " + Constant.getInt("singleFileMax")*1024);
+            }
+        }
+        int time = file.getDay()*24*60 + file.getHour()*60 + file.getMinute();
+        if (time > Constant.getInt("keepMax")) {
+            throw new Exception("文件时间 （" + time + "）非法，当前规定时间长度 = " + Constant.getInt("keepMax"));
+        }
+        return;
+    }
+
+    @Override
+    public void prepareAfterCheck(VoFile file) throws IOException {
+        int keep = file.getDay()*24*60 + file.getHour()*60 + file.getMinute();
+        Date start = new Date();
+        long size = 0;
+        if ("fastText".equals(file.getCurrentFileKind())) {
+            if (StringUtils.isEmpty(file.getName())) {
+                file.setName(file.getjFile().getName());
+            }
+            size = file.getjFile().length();
+            file.setFileid(FastDFSClient.uploadFile(file.getjFile(),file.getName()));
+        } else if ("uploadFile".equals(file.getCurrentFileKind())) {
+            if (StringUtils.isEmpty(file.getName())) {
+                file.setName(file.getSrcFile().getOriginalFilename());
+            }
+            size = file.getSrcFile().getSize();
+            file.setFileid(FastDFSClient.uploadFile(file.getSrcFile().getInputStream(),file.getName()));
+        }
+        file.setSize(size);
+        file.setKeep(keep);
+        file.setStart(start);
+        if (file.getAccess() == 2 && StringUtils.isEmpty(file.getAuthoricode())) {
+            file.setAuthoricode("123");
+        }
     }
 
     private List<VoFile> vo(List<File> fileList) {

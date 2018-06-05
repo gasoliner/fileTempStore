@@ -3,6 +3,7 @@ package cn.fts.service;
 import cn.fts.po.File;
 import cn.fts.vo.VoFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface FileService {
@@ -20,4 +21,8 @@ public interface FileService {
     List<VoFile> list();
 
     int deleteByPrimaryKey(String id);
+
+    void check (VoFile file) throws Exception;
+
+    void prepareAfterCheck(VoFile file) throws IOException;
 }

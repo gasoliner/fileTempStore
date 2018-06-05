@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="cn.fts.po.File">
     <id column="fileid" jdbcType="VARCHAR" property="fileid" />
     <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="size" jdbcType="INTEGER" property="size" />
+    <result column="size" jdbcType="BIGINT" property="size" />
     <result column="start" jdbcType="TIMESTAMP" property="start" />
     <result column="keep" jdbcType="INTEGER" property="keep" />
     <result column="access" jdbcType="INTEGER" property="access" />
@@ -106,7 +106,7 @@
     insert into file (fileid, name, size, 
       start, keep, access, 
       authoricode, uploadby)
-    values (#{fileid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{size,jdbcType=INTEGER}, 
+    values (#{fileid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{size,jdbcType=BIGINT}, 
       #{start,jdbcType=TIMESTAMP}, #{keep,jdbcType=INTEGER}, #{access,jdbcType=INTEGER}, 
       #{authoricode,jdbcType=VARCHAR}, #{uploadby,jdbcType=VARCHAR})
   </insert>
@@ -146,7 +146,7 @@
         #{name,jdbcType=VARCHAR},
       </if>
       <if test="size != null">
-        #{size,jdbcType=INTEGER},
+        #{size,jdbcType=BIGINT},
       </if>
       <if test="start != null">
         #{start,jdbcType=TIMESTAMP},
@@ -181,7 +181,7 @@
         name = #{record.name,jdbcType=VARCHAR},
       </if>
       <if test="record.size != null">
-        size = #{record.size,jdbcType=INTEGER},
+        size = #{record.size,jdbcType=BIGINT},
       </if>
       <if test="record.start != null">
         start = #{record.start,jdbcType=TIMESTAMP},
@@ -207,7 +207,7 @@
     update file
     set fileid = #{record.fileid,jdbcType=VARCHAR},
       name = #{record.name,jdbcType=VARCHAR},
-      size = #{record.size,jdbcType=INTEGER},
+      size = #{record.size,jdbcType=BIGINT},
       start = #{record.start,jdbcType=TIMESTAMP},
       keep = #{record.keep,jdbcType=INTEGER},
       access = #{record.access,jdbcType=INTEGER},
@@ -224,7 +224,7 @@
         name = #{name,jdbcType=VARCHAR},
       </if>
       <if test="size != null">
-        size = #{size,jdbcType=INTEGER},
+        size = #{size,jdbcType=BIGINT},
       </if>
       <if test="start != null">
         start = #{start,jdbcType=TIMESTAMP},
@@ -247,7 +247,7 @@
   <update id="updateByPrimaryKey" parameterType="cn.fts.po.File">
     update file
     set name = #{name,jdbcType=VARCHAR},
-      size = #{size,jdbcType=INTEGER},
+      size = #{size,jdbcType=BIGINT},
       start = #{start,jdbcType=TIMESTAMP},
       keep = #{keep,jdbcType=INTEGER},
       access = #{access,jdbcType=INTEGER},

@@ -32,14 +32,29 @@ public class FileController {
     @RequestMapping("/fastText")
     @ResponseBody
     public String fastText(VoFile file,String content,HttpServletRequest request) {
+        file.setCurrentFileKind("fastText");
         try {
+
+//            因为后面会生成一个临时文件，所以需要判断一下content长度
+
             java.io.File textFile = FileUtils.generateNewText("E://temp.txt",content);
             System.out.println(textFile.getName());
+            file.setjFile(textFile);
+//            prepareBeforeCheck
+//            file.prepareBeforeCheck(file);
+//            check
+            fileService.check(file);
+//            prepareAfterCheck
+            fileService.prepareAfterCheck(file);
 //            file.setSrcFile();
+            fileService.insert(file);
+            FileUtils.deleteFile(textFile);
+            log("fastText","successful",request,file,"");
+            return JSON.toJSONString(new ResponseData<>(0,"操作成功",null));
         } catch (Exception e) {
-
+            log("fastText","failed",request,file,"");
+            return JSON.toJSONString(new ResponseData<>(1,"操作失败",null));
         }
-        return "";
     }
 
     @RequestMapping("/upload")
@@ -53,18 +68,14 @@ public class FileController {
          * 上传file
          * 保存到 DB
          */
-        boolean result = false;
-        if (fileService.checkVoFile(file)) {
-            try {
-                fileService.insert(file);
-                result = true;
-            } catch (Exception e) {
-            }
-        }
-        if (result) {
+        file.setCurrentFileKind("uploadFile");
+        try {
+            fileService.check(file);
+            fileService.prepareAfterCheck(file);
+            fileService.insert(file);
             log("upload","successful",request,file,"");
             return JSON.toJSONString(new ResponseData<>(0,"操作成功",null));
-        } else {
+        } catch (Exception e) {
             log("upload","failed",request,file,"");
             return JSON.toJSONString(new ResponseData<>(1,"操作失败",null));
         }

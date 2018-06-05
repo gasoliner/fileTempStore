@@ -20,6 +20,10 @@ public class VoFile extends File {
 
     private CommonsMultipartFile srcFile;
 
+    private java.io.File jFile;
+
+    private String currentFileKind;
+
     public String getAction() {
         return action;
     }
@@ -66,6 +70,22 @@ public class VoFile extends File {
 
     public void setMinute(Integer minute) {
         this.minute = minute;
+    }
+
+    public java.io.File getjFile() {
+        return jFile;
+    }
+
+    public void setjFile(java.io.File jFile) {
+        this.jFile = jFile;
+    }
+
+    public String getCurrentFileKind() {
+        return currentFileKind;
+    }
+
+    public void setCurrentFileKind(String currentFileKind) {
+        this.currentFileKind = currentFileKind;
     }
 
     @Override

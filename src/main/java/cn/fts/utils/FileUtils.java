@@ -24,7 +24,10 @@ public class FileUtils {
     }
 
     public static boolean deleteFile(String filePath) throws IOException {
-        File file = new File(filePath);
+        return deleteFile(new File(filePath));
+    }
+
+    public static boolean deleteFile(File file) throws IOException {
         return file.delete();
     }
 }
