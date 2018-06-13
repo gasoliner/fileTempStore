@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping(value = "/file",produces = {"application/json;charset=UTF-8"})
@@ -37,7 +38,10 @@ public class FileController {
 
 //            因为后面会生成一个临时文件，所以需要判断一下content长度
 
-            java.io.File textFile = FileUtils.generateNewText("E://temp.txt",content);
+            java.io.File textFile = null;
+            synchronized (this) {
+                textFile = FileUtils.generateNewText("/" + UUID.randomUUID().toString().replaceAll("-","") +".txt",content);
+            }
             System.out.println(textFile.getName());
             file.setjFile(textFile);
 //            prepareBeforeCheck
@@ -52,7 +56,7 @@ public class FileController {
             log("fastText","successful",request,file,"");
             return JSON.toJSONString(new ResponseData<>(0,"操作成功",null));
         } catch (Exception e) {
-            log("fastText","failed",request,file,"");
+            log("fastText","failed",request,file,e.getMessage());
             return JSON.toJSONString(new ResponseData<>(1,"操作失败",null));
         }
     }
@@ -76,7 +80,7 @@ public class FileController {
             log("upload","successful",request,file,"");
             return JSON.toJSONString(new ResponseData<>(0,"操作成功",null));
         } catch (Exception e) {
-            log("upload","failed",request,file,"");
+            log("upload","failed",request,file,e.getMessage());
             return JSON.toJSONString(new ResponseData<>(1,"操作失败",null));
         }
     }
