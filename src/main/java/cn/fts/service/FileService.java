@@ -25,4 +25,6 @@ public interface FileService {
     void check (VoFile file) throws Exception;
 
     void prepareAfterCheck(VoFile file) throws IOException;
+
+    String getSupportPreviewedProcessor(String fileid);
 }

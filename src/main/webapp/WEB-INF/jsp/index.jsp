@@ -31,7 +31,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 col-sm-2 control-label">文件名</label>
                                     <div class="col-sm-10">
-                                        <input type="text" name="name"  class="form-control" placeholder="默认为源文件名">
+                                        <input type="text" name="name"  class="form-control" placeholder="建议填写，因为后台使用UUID生成默认文件名">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -175,6 +175,7 @@
             <th class="hidden-phone"><i class="fa fa-question-circle"></i> 文件大小(kb)</th>
             <th class="hidden-phone"><i class="fa fa-question-circle"></i> 上传时间</th>
             <th class="hidden-phone"><i class="fa fa-question-circle"></i> 过期时间</th>
+            <th class="hidden-phone"><i class="fa fa-question-circle"></i> 剩余时间</th>
             <th><i class="fa fa-bookmark"></i> 访问权限</th>
             <th><i class=" fa fa-edit"></i> 操作</th>
             <th></th>
@@ -183,6 +184,23 @@
         <tbody id="fileTbody">
         </tbody>
     </table>
+</div>
+
+<button class="btn btn-primary btn-lg" data-toggle="modal" onclick="requestPreview('123')">开始演示模态框</button>
+<!-- 请求预览结果 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">预览</h4>
+            </div>
+            <div class="modal-body">在这里添加一些文本</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
 </div>
 
 </body>

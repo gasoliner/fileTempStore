@@ -151,6 +151,24 @@ public class FileServiceImpl implements FileService {
         }
     }
 
+    @Override
+    public String getSupportPreviewedProcessor(String fileid) {
+        File file = fileMapper.selectByPrimaryKey(fileid);
+        if (file == null) {
+            return null;
+        }
+        String extension = FileUtils.getExtension(file.getName());
+        String[] supportTypes = Constant.getConfig("supportTypes").split(",");
+        for (String type:
+                supportTypes) {
+            String[] items = type.split("-");
+            if (items[0].equals(extension)) {
+                return items[1];
+            }
+        }
+        return null;
+    }
+
     private List<VoFile> vo(List<File> fileList) {
         List<VoFile> voFileList = new ArrayList<>();
         for (File file:
@@ -166,6 +184,15 @@ public class FileServiceImpl implements FileService {
                 continue;
             } else {
                 voFile.setExpirationTime(new Date(expirationTime));
+                voFile.setDay(Math.toIntExact(timeDifference / (1000 * 60 * 60 * 24)));
+                timeDifference %= (1000 * 60 * 60 * 24);
+                voFile.setHour(Math.toIntExact(timeDifference / (1000 * 60 * 60)));
+                timeDifference %= (1000 * 60 * 60);
+                if (timeDifference / (1000 * 60) == 0) {
+                    voFile.setMinute(1);
+                } else {
+                    voFile.setMinute(Math.toIntExact(timeDifference / (1000 * 60)));
+                }
             }
             voFile.setAccess(file.getAccess());
             String action;

@@ -46,6 +46,7 @@ function refreshFileTab() {
                         "<td>" + data[i].size + "</td>" +
                         "<td>" + data[i].start + "</td>" +
                         "<td>" + data[i].expirationTime + "</td>" +
+                        "<td>" + data[i].day + " 天 " + data[i].hour + " 小时 " + data[i].minute + " 分钟 " + "</td>" +
                         "<td>" + data[i].access + "</td>" +
                         "<td>" + data[i].action + "</td>" +
                         "</tr>";
@@ -92,7 +93,34 @@ function fastText() {
     $("#fastTextForm").resetForm();
     refreshFileTab();
 }
-
+function requestPreview(id) {
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: "file/previewed/" + id,
+        success: function (msg) {
+            if (msg.state == 0) {
+                var str = "";
+                var data = msg.data;
+                for (i in data) {
+                    str += "<tr>" +
+                        "<td>" + data[i].name + "</td>" +
+                        "<td>" + data[i].size + "</td>" +
+                        "<td>" + data[i].start + "</td>" +
+                        "<td>" + data[i].expirationTime + "</td>" +
+                        "<td>" + data[i].day + " 天 " + data[i].hour + " 小时 " + data[i].minute + " 分钟 " + "</td>" +
+                        "<td>" + data[i].access + "</td>" +
+                        "<td>" + data[i].action + "</td>" +
+                        "</tr>";
+                }
+                $("#fileTbody").html(str);
+            }
+        },
+        error: function () {
+            alert("查询失败")
+        }
+    });
+}
 
 
 

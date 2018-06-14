@@ -1,5 +1,7 @@
 package cn.fts.po;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.util.Date;
 
 public class File {
@@ -9,6 +11,7 @@ public class File {
 
     private Long size;
 
+    @JSONField (format="yyyy-MM-dd HH:mm:ss")
     private Date start;
 
     private Integer keep;

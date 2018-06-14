@@ -1,17 +1,16 @@
 package cn.fts.controller;
 
 import cn.fts.po.File;
+import cn.fts.preview.PreviewProcessor;
 import cn.fts.service.FileService;
-import cn.fts.utils.FastDFSClient;
-import cn.fts.utils.FileUtils;
-import cn.fts.utils.PageUtil;
-import cn.fts.utils.RequestUtils;
+import cn.fts.utils.*;
 import cn.fts.vo.ResponseData;
 import cn.fts.vo.VoFile;
 import com.alibaba.fastjson.JSON;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -30,6 +29,25 @@ public class FileController {
     @Autowired
     FileService fileService;
 
+    @RequestMapping("/previewed/{fileid}")
+    @ResponseBody
+    public String previewed(@PathVariable String fileid) {
+        try {
+            String supportPreviewProcessor = fileService.getSupportPreviewedProcessor(fileid);
+            if (supportPreviewProcessor != null) {
+                PreviewProcessor processor = (PreviewProcessor)Class.forName("cn.fts.preview.impl." + supportPreviewProcessor +"PreviewProcessor").newInstance();
+                String result = processor.previewed(fileid);
+                return JSON.toJSONString(new ResponseData<>(0,"操作成功",result));
+            } else {
+            }
+//            log("fastText","successful",request,file,"");
+            return JSON.toJSONString(new ResponseData<>(0,"操作成功",null));
+        } catch (Exception e) {
+//            log("fastText","failed",request,file,e.getMessage());
+            return JSON.toJSONString(new ResponseData<>(1,"操作失败",null));
+        }
+    }
+
     @RequestMapping("/fastText")
     @ResponseBody
     public String fastText(VoFile file,String content,HttpServletRequest request) {
@@ -37,7 +55,9 @@ public class FileController {
         try {
 
 //            因为后面会生成一个临时文件，所以需要判断一下content长度
-
+            if (content.length() > Constant.getInt("fastText_maxSize")) {
+                throw new Exception("字符串长度（" + content.length() + "）非法，当前规定大小 = " + Constant.getInt("fastText_maxSize"));
+            }
             java.io.File textFile = null;
             synchronized (this) {
                 textFile = FileUtils.generateNewText("/" + UUID.randomUUID().toString().replaceAll("-","") +".txt",content);

@@ -1,6 +1,8 @@
 package cn.fts.utils;
 
 
+import org.junit.Test;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,7 +11,11 @@ import java.io.InputStream;
 public class FileUtils {
 
     public static String getExtension (String fileName) {
-        return fileName.substring(fileName.lastIndexOf(".")+1);
+        if (fileName.lastIndexOf(".") < 0) {
+            return null;
+        } else {
+            return fileName.substring(fileName.lastIndexOf(".")+1);
+        }
     }
 
     public static File generateNewText(String filePath,String content) throws IOException {
