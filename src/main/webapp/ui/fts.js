@@ -94,14 +94,17 @@ function fastText() {
     refreshFileTab();
 }
 function requestPreview(id) {
+    alert("id = " + id);
     $.ajax({
         type: "GET",
         dataType: "json",
         url: "file/previewed?fileid=" + id,
         beforeSend:function (){
+            alert("beforeSend");
             $("#waitModal").modal('show');
         },
         success: function (msg) {
+            alert("msg = " + msg);
             $("#waitModal").modal('hide');
             if (msg.state == 0) {
                 var data = msg.data;

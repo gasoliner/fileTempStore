@@ -32,13 +32,14 @@ public class FileController {
     @RequestMapping("/previewed")
     @ResponseBody
     public String previewed(String fileid) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
-            String supportPreviewProcessor = fileService.getSupportPreviewedProcessor(fileid);
-            if (supportPreviewProcessor != null) {
-                PreviewProcessor processor = (PreviewProcessor)Class.forName("cn.fts.preview.impl." + supportPreviewProcessor +"PreviewProcessor").newInstance();
-                String result = processor.previewed(fileid);
-                return JSON.toJSONString(new ResponseData<>(0,"操作成功",result));
-            }
-            return JSON.toJSONString(new ResponseData<>(1,"操作失败","该文件暂不支持预览"));
+        System.out.println("previewed fileid = " + fileid);
+        String supportPreviewProcessor = fileService.getSupportPreviewedProcessor(fileid);
+        if (supportPreviewProcessor != null) {
+            PreviewProcessor processor = (PreviewProcessor)Class.forName("cn.fts.preview.impl." + supportPreviewProcessor +"PreviewProcessor").newInstance();
+            String result = processor.previewed(fileid);
+            return JSON.toJSONString(new ResponseData<>(0,"操作成功",result));
+        }
+        return JSON.toJSONString(new ResponseData<>(1,"操作失败","该文件暂不支持预览"));
     }
 
     @RequestMapping("/fastText")
