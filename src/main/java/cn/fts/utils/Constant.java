@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * Created by Ww on 2017/11/20.
@@ -98,5 +99,9 @@ public class Constant {
                     + value);
         }
         return defaultValue;
+    }
+
+    public static Set<Map.Entry<Object, Object>> settings() {
+        return props.entrySet();
     }
 }

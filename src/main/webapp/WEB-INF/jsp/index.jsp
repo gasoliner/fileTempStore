@@ -4,6 +4,7 @@
 <head>
     <title>index</title>
     <jsp:include page="common/head.jsp"/>
+    <link href="/ui/fts.css" rel="stylesheet" />
     <link href="/ui/fileupload/css/fileinput.css" rel="stylesheet" />
     <link href="/ui/fileupload/themes/explorer-fa/theme.css"/>
     <script type="text/javascript" src="/ui/fileupload/js/fileinput.js"></script>
@@ -31,7 +32,10 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 col-sm-2 control-label">文件名</label>
                                     <div class="col-sm-10">
-                                        <input type="text" name="name"  class="form-control" placeholder="建议填写，因为后台使用UUID生成默认文件名">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="name" placeholder="建议填写，因为后台使用UUID生成默认文件名，仅填写文件名，系统统一文件后缀.txt">
+                                            <span class="input-group-addon">.txt</span>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -43,14 +47,19 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 col-sm-2 control-label">输入文件保存时长（最长10天）</label>
                                     <div class="col-sm-10">
-                                        <div>
-                                            <input type="text"  class="form-control" name="day" value="0">天
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="day" value="0">
+                                            <span class="input-group-addon">天</span>
                                         </div>
-                                        <div>
-                                            <input type="text"  class="form-control" name="hour" value="0">小时
+                                        <br>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="hour" value="0">
+                                            <span class="input-group-addon">小时</span>
                                         </div>
-                                        <div>
-                                            <input type="text"  class="form-control" name="minute" value="0">分钟
+                                        <br>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="minute" value="0">
+                                            <span class="input-group-addon">分钟</span>
                                         </div>
                                     </div>
                                 </div>
@@ -117,14 +126,19 @@
                             <div class="form-group">
                                 <label class="col-sm-2 col-sm-2 control-label">输入文件保存时长（最长10天）</label>
                                 <div class="col-sm-10">
-                                    <div>
-                                        <input type="text"  class="form-control" name="day" value="0">天
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="day" value="0">
+                                        <span class="input-group-addon">天</span>
                                     </div>
-                                    <div>
-                                        <input type="text"  class="form-control" name="hour" value="0">小时
+                                    <br>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="hour" value="0">
+                                        <span class="input-group-addon">小时</span>
                                     </div>
-                                    <div>
-                                        <input type="text"  class="form-control" name="minute" value="0">分钟
+                                    <br>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="minute" value="0">
+                                        <span class="input-group-addon">分钟</span>
                                     </div>
                                 </div>
                             </div>
@@ -186,7 +200,6 @@
     </table>
 </div>
 
-<button class="btn btn-primary btn-lg" data-toggle="modal" onclick="requestPreview('group1/M00/00/01/sHquUlsiWfqAGUW8AAAAEBK7n0c256.txt')">开始演示模态框</button>
 <!-- 请求预览结果 -->
 <div class="modal fade" id="previewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -202,7 +215,7 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
-<div class="modal fade" id="waitModal">
+<div class="modal fade" data-backdrop="static" id="waitModal">
     <div class="modal-dialog modal-sm">
         <img src="/ui/img/wait.gif">
     </div>

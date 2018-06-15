@@ -38,7 +38,7 @@ public class FileController {
                 String result = processor.previewed(fileid);
                 return JSON.toJSONString(new ResponseData<>(0,"操作成功",result));
             }
-            return JSON.toJSONString(new ResponseData<>(1,"操作失败",null));
+            return JSON.toJSONString(new ResponseData<>(1,"操作失败","该文件暂不支持预览"));
     }
 
     @RequestMapping("/fastText")
@@ -122,7 +122,7 @@ public class FileController {
         }
         if (flag) {
 //            允许下载文件
-            PageUtil.settingResponseForDownLoad(file.getName(),response);
+            PageUtil.settingResponseForDownLoad(file.getName(),request,response);
             FastDFSClient.downloadFile(fileId,response.getOutputStream());
             log("download","success",request,file,"");
         }

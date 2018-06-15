@@ -135,8 +135,21 @@ public class PageUtil {
         outputStream.close();
     }
 
-    public static void settingResponseForDownLoad(String fileName,HttpServletResponse response) {
+    public static void settingResponseForDownLoad(String fileName, HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
         response.reset();
+
+        String userAgent = request.getHeader("User-Agent");
+//        文件下载时文件名乱码问题解决方案
+        // 针对IE或者以IE为内核的浏览器：
+        if (userAgent.contains("MSIE") || userAgent.contains("Trident")) {
+            fileName = java.net.URLEncoder.encode(fileName, "UTF-8");
+        } else {
+            // 非IE浏览器的处理：
+            fileName = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");
+        }
+        response.setCharacterEncoding("UTF-8");
+//        文件下载时文件名乱码问题解决方案——end
+
         String mimeType = URLConnection.guessContentTypeFromName(fileName);
         response.setContentType(mimeType);
         response.setHeader("Content-Disposition", "attachment; filename=" + fileName);

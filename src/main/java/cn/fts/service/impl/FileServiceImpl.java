@@ -199,9 +199,11 @@ public class FileServiceImpl implements FileService {
             String fileId = file.getFileid();
             String fileIdHtmlId = fileId.replaceAll("/","").replaceAll("\\.","");
             if (voFile.getAccess() == 2) {
-                action = "<input id=\"" + fileIdHtmlId +"\" type=\"text\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"button\" value=\"download\" onclick=\"downloadFile('" + fileIdHtmlId +"','" + fileId +"')\">";
+                action = "<form class=\"form-inline\"><input id=\"" + fileIdHtmlId +"\" type=\"text\" class=\"form-control\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class=\"btn btn-success\" onclick=\"downloadFile('" + fileIdHtmlId + "','" + fileId +"')\">下载</button>&nbsp;&nbsp;" +
+                        "<button class=\"btn btn-info\" data-toggle=\"modal\" onclick=\"requestPreview('" + fileId +"')\">预览该文件</button></form>";
             } else {
-                action = "<input type=\"button\" value=\"download\" onclick=\"downloadFile('no','" + fileId + "')\">";
+                action = "<button class=\"btn btn-success\" onclick=\"downloadFile('no','" + fileId + "')\">下载</button>&nbsp;&nbsp;" +
+                        "<button class=\"btn btn-info\" data-toggle=\"modal\" onclick=\"requestPreview('" + fileId +"')\">预览该文件</button>";
             }
             voFile.setAction(action);
             voFileList.add(voFile);
