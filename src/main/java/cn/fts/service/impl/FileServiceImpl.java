@@ -133,6 +133,8 @@ public class FileServiceImpl implements FileService {
         if ("fastText".equals(file.getCurrentFileKind())) {
             if (StringUtils.isEmpty(file.getName())) {
                 file.setName(file.getjFile().getName());
+            } else {
+                file.setName(file.getName() + ".txt");
             }
             size = file.getjFile().length();
             file.setFileid(FastDFSClient.uploadFile(file.getjFile(),file.getName()));
