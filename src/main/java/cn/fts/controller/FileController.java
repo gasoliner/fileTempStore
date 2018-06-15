@@ -31,15 +31,24 @@ public class FileController {
 
     @RequestMapping("/previewed")
     @ResponseBody
-    public String previewed(String fileid) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
-        System.out.println("previewed fileid = " + fileid);
-        String supportPreviewProcessor = fileService.getSupportPreviewedProcessor(fileid);
-        if (supportPreviewProcessor != null) {
-            PreviewProcessor processor = (PreviewProcessor)Class.forName("cn.fts.preview.impl." + supportPreviewProcessor +"PreviewProcessor").newInstance();
-            String result = processor.previewed(fileid);
-            return JSON.toJSONString(new ResponseData<>(0,"操作成功",result));
+    public String previewed(String fileid,String authoricode) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+        File file = fileService.selectByPrimaryKey(fileid);
+        boolean flag = true;
+        if (file.getAccess() == 2) {
+            if (!file.getAuthoricode().equals(authoricode)) {
+                flag = false;
+            }
         }
-        return JSON.toJSONString(new ResponseData<>(1,"操作失败","该文件暂不支持预览"));
+        if (flag) {
+            String supportPreviewProcessor = fileService.getSupportPreviewedProcessor(fileid);
+            if (supportPreviewProcessor != null) {
+                PreviewProcessor processor = (PreviewProcessor)Class.forName("cn.fts.preview.impl." + supportPreviewProcessor +"PreviewProcessor").newInstance();
+                String result = processor.previewed(fileid);
+                return JSON.toJSONString(new ResponseData<>(0,"操作成功",result));
+            }
+        }
+
+        return JSON.toJSONString(new ResponseData<>(1,"操作失败","预览失败，可能是该文件暂不支持预览或者权限校验未通过"));
     }
 
     @RequestMapping("/fastText")

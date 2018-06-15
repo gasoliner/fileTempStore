@@ -93,27 +93,30 @@ function fastText() {
     $("#fastTextForm").resetForm();
     refreshFileTab();
 }
-function requestPreview(id) {
-    alert("id = " + id);
+function requestPreview(inputAuthCodeId,id) {
+    var url;
+    if (inputAuthCodeId != 'no') {
+        url = "/file/previewed?fileid=" + id + "&authoricode=" + $("#" + inputAuthCodeId).val();
+    } else {
+        url = "/file/previewed?fileid=" + id;
+    }
     $.ajax({
         type: "GET",
         dataType: "json",
-        url: "file/previewed?fileid=" + id,
+        url: url,
         beforeSend:function (){
-            alert("beforeSend");
             $("#waitModal").modal('show');
         },
         success: function (msg) {
-            alert("msg = " + msg);
             $("#waitModal").modal('hide');
-            if (msg.state == 0) {
-                var data = msg.data;
-                $("#previewArea").html(data);
-                $("#previewModal").modal('show');
-            }
+
+            var data = msg.data;
+            $("#previewArea").html(data);
+            $("#previewModal").modal('show');
         },
         error: function () {
-            alert("查询失败")
+            $("#waitModal").modal('hide');
+            alert("查询失败");
         }
     });
 }
