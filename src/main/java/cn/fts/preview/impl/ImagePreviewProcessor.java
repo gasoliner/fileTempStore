@@ -9,6 +9,6 @@ public class ImagePreviewProcessor implements PreviewProcessor {
 
     @Override
     public String previewed(String fileId) {
-        return null;
+        return "ImagePreviewProcessor未实现";
     }
 }

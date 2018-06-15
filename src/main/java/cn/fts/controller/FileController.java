@@ -29,23 +29,16 @@ public class FileController {
     @Autowired
     FileService fileService;
 
-    @RequestMapping("/previewed/{fileid}")
+    @RequestMapping("/previewed")
     @ResponseBody
-    public String previewed(@PathVariable String fileid) {
-        try {
+    public String previewed(String fileid) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
             String supportPreviewProcessor = fileService.getSupportPreviewedProcessor(fileid);
             if (supportPreviewProcessor != null) {
                 PreviewProcessor processor = (PreviewProcessor)Class.forName("cn.fts.preview.impl." + supportPreviewProcessor +"PreviewProcessor").newInstance();
                 String result = processor.previewed(fileid);
                 return JSON.toJSONString(new ResponseData<>(0,"操作成功",result));
-            } else {
             }
-//            log("fastText","successful",request,file,"");
-            return JSON.toJSONString(new ResponseData<>(0,"操作成功",null));
-        } catch (Exception e) {
-//            log("fastText","failed",request,file,e.getMessage());
             return JSON.toJSONString(new ResponseData<>(1,"操作失败",null));
-        }
     }
 
     @RequestMapping("/fastText")

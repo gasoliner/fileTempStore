@@ -55,7 +55,7 @@ function refreshFileTab() {
             }
         },
         error: function () {
-            alert("查询失败")
+            alert("查询失败");
         }
     });
 }
@@ -95,25 +95,18 @@ function fastText() {
 }
 function requestPreview(id) {
     $.ajax({
-        type: "POST",
+        type: "GET",
         dataType: "json",
-        url: "file/previewed/" + id,
+        url: "file/previewed?fileid=" + id,
+        beforeSend:function (){
+            $("#waitModal").modal('show');
+        },
         success: function (msg) {
+            $("#waitModal").modal('hide');
             if (msg.state == 0) {
-                var str = "";
                 var data = msg.data;
-                for (i in data) {
-                    str += "<tr>" +
-                        "<td>" + data[i].name + "</td>" +
-                        "<td>" + data[i].size + "</td>" +
-                        "<td>" + data[i].start + "</td>" +
-                        "<td>" + data[i].expirationTime + "</td>" +
-                        "<td>" + data[i].day + " 天 " + data[i].hour + " 小时 " + data[i].minute + " 分钟 " + "</td>" +
-                        "<td>" + data[i].access + "</td>" +
-                        "<td>" + data[i].action + "</td>" +
-                        "</tr>";
-                }
-                $("#fileTbody").html(str);
+                $("#previewArea").html(data);
+                $("#previewModal").modal('show');
             }
         },
         error: function () {
