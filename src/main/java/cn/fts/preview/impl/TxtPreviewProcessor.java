@@ -19,7 +19,7 @@ public class TxtPreviewProcessor implements PreviewProcessor {
         FastDFSClient.downloadFile(fileId, outputStream);
         String result = null;
         try {
-            result = new String(outputStream.toByteArray(),"GBK");
+            result = outputStream.toString();
             outputStream.close();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
