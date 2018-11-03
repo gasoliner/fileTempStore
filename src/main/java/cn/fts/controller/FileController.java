@@ -1,5 +1,6 @@
 package cn.fts.controller;
 
+import cn.fts.config.ConstantAd;
 import cn.fts.po.File;
 import cn.fts.preview.PreviewProcessor;
 import cn.fts.service.FileService;
@@ -10,7 +11,6 @@ import com.alibaba.fastjson.JSON;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -28,6 +28,9 @@ public class FileController {
 
     @Autowired
     FileService fileService;
+
+    @Autowired
+    ConstantAd constantAd;
 
     @RequestMapping("/previewed")
     @ResponseBody
@@ -58,8 +61,8 @@ public class FileController {
         try {
 
 //            因为后面会生成一个临时文件，所以需要判断一下content长度
-            if (content.length() > Constant.getInt("fastText_maxSize")) {
-                throw new Exception("字符串长度（" + content.length() + "）非法，当前规定大小 = " + Constant.getInt("fastText_maxSize"));
+            if (content.length() > constantAd.getInt("fastText_maxSize")) {
+                throw new Exception("字符串长度（" + content.length() + "）非法，当前规定大小 = " + constantAd.getInt("fastText_maxSize"));
             }
             java.io.File textFile = null;
             synchronized (this) {

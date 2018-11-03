@@ -4,7 +4,6 @@ import cn.fts.po.File;
 import cn.fts.service.FileService;
 import cn.fts.utils.SpringContextUtil;
 import org.apache.log4j.Logger;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Date;

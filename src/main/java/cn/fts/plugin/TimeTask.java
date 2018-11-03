@@ -1,12 +1,18 @@
 package cn.fts.plugin;
 
+import cn.fts.config.ConstantAd;
 import cn.fts.plugin.timerTask.FileCheckTask;
 import cn.fts.utils.Constant;
 import org.apache.commons.lang3.time.DateUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Timer;
 
 public class TimeTask {
+
+    @Autowired
+    private ConstantAd constantAd;
+
     /**
      * 每分钟的毫秒数
      */
@@ -25,7 +31,7 @@ public class TimeTask {
     private Timer timer;
 
     public void start() {
-        int scanningInterval = Constant.getInt("scanningInterval");
+        int scanningInterval = constantAd.getInt("scanningInterval");
         timer = new Timer("文件过期检查",true);
         timer.schedule(new FileCheckTask(),NO_DELAY,PERIOD_MINUTE*scanningInterval);
     }

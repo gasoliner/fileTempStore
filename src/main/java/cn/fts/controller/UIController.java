@@ -2,6 +2,7 @@ package cn.fts.controller;
 
 import cn.fts.plugin.TimeTask;
 import cn.fts.utils.PageUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,13 +18,17 @@ import java.io.IOException;
 @Controller
 public class UIController {
 
-    private boolean timeTaskIsRunning = false;
+    /**
+     * todo 此种方式有并发问题
+     */
+    private volatile boolean timeTaskIsRunning = false;
+
+    @Autowired
     private TimeTask timeTask;
 
     @RequestMapping("/")
     public String showIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (!timeTaskIsRunning) {
-            timeTask = new TimeTask();
             timeTask.start();
             timeTaskIsRunning = true;
         }

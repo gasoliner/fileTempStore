@@ -1,15 +1,14 @@
 package cn.fts.service.impl;
 
+import cn.fts.config.listener.ConfigListener;
 import cn.fts.mapper.FileMapper;
-import cn.fts.mapper.UserMapper;
 import cn.fts.po.File;
 import cn.fts.po.FileExample;
 import cn.fts.service.FileService;
 import cn.fts.service.UserService;
-import cn.fts.utils.Constant;
+import cn.fts.config.ConstantAd;
 import cn.fts.utils.FastDFSClient;
 import cn.fts.utils.FileUtils;
-import cn.fts.utils.TimeUtils;
 import cn.fts.vo.VoFile;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +20,18 @@ import java.util.Date;
 import java.util.List;
 
 @Service("fileService")
-public class FileServiceImpl implements FileService {
+public class FileServiceImpl implements FileService, ConfigListener {
 
     @Autowired
     FileMapper fileMapper;
     @Autowired
     UserService userService;
+    @Autowired
+    ConstantAd constantAd;
+
+    private volatile int singleFileMax = constantAd.getInt("singleFileMax");
+    private volatile int keepMax = constantAd.getInt("keepMax");
+    private volatile String supportTypeList = constantAd.getConfig("supportTypes");
 
 
     public boolean checkVoFile(VoFile file) {
@@ -110,17 +115,17 @@ public class FileServiceImpl implements FileService {
     @Override
     public void check(VoFile file) throws Exception {
         if ("fastText".equals(file.getCurrentFileKind())) {
-            if (file.getjFile().length() == 0||file.getjFile().length() > (Constant.getInt("singleFileMax")*1024)) {
-                throw new Exception("文件大小（" + file.getjFile().length() + "）非法，当前规定大小 = " + Constant.getInt("singleFileMax")*1024);
+            if (file.getjFile().length() == 0||file.getjFile().length() > (singleFileMax*1024)) {
+                throw new Exception("文件大小（" + file.getjFile().length() + "）非法，当前规定大小 = " + singleFileMax*1024);
             }
         } else if ("uploadFile".equals(file.getCurrentFileKind())) {
-            if (file.getSrcFile().getSize() == 0||file.getSrcFile().getSize() > (Constant.getInt("singleFileMax")*1024)) {
-                throw new Exception("文件大小（" + file.getSrcFile().getSize() + "）非法，当前规定大小 = " + Constant.getInt("singleFileMax")*1024);
+            if (file.getSrcFile().getSize() == 0||file.getSrcFile().getSize() > (singleFileMax*1024)) {
+                throw new Exception("文件大小（" + file.getSrcFile().getSize() + "）非法，当前规定大小 = " + singleFileMax*1024);
             }
         }
         int time = file.getDay()*24*60 + file.getHour()*60 + file.getMinute();
-        if (time > Constant.getInt("keepMax")) {
-            throw new Exception("文件时间 （" + time + "）非法，当前规定时间长度 = " + Constant.getInt("keepMax"));
+        if (time > keepMax) {
+            throw new Exception("文件时间 （" + time + "）非法，当前规定时间长度 = " + keepMax);
         }
         return;
     }
@@ -160,7 +165,7 @@ public class FileServiceImpl implements FileService {
             return null;
         }
         String extension = FileUtils.getExtension(file.getName());
-        String[] supportTypes = Constant.getConfig("supportTypes").split(",");
+        String[] supportTypes = supportTypeList.split(",");
         for (String type:
                 supportTypes) {
             String[] items = type.split("-");
@@ -215,5 +220,12 @@ public class FileServiceImpl implements FileService {
 
     private int deleteFileEntry(String id) {
         return FastDFSClient.deleteFile(id);
+    }
+
+    @Override
+    public void updateConfig(ConstantAd constant) {
+        this.singleFileMax = constant.getInt("singleFileMax");
+        this.keepMax = constant.getInt("keepMax");
+        this.supportTypeList = constant.getConfig("supportTypes");
     }
 }
