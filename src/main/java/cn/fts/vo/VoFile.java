@@ -7,6 +7,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import java.util.Date;
 
 public class VoFile extends File {
+
     private Integer day;
 
     private Integer hour;
@@ -23,6 +24,8 @@ public class VoFile extends File {
     private java.io.File jFile;
 
     private String currentFileKind;
+
+    private long remaining;
 
     public String getAction() {
         return action;
@@ -88,6 +91,14 @@ public class VoFile extends File {
         this.currentFileKind = currentFileKind;
     }
 
+    public long getRemaining() {
+        return remaining;
+    }
+
+    public void setRemaining(long remaining) {
+        this.remaining = remaining;
+    }
+
     @Override
     public String toString() {
         return "VoFile{" +
@@ -97,6 +108,9 @@ public class VoFile extends File {
                 ", expirationTime=" + expirationTime +
                 ", action='" + action + '\'' +
                 ", srcFile=" + srcFile +
+                ", jFile=" + jFile +
+                ", currentFileKind='" + currentFileKind + '\'' +
+                ", remaining=" + remaining +
                 '}';
     }
 }

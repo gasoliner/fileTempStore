@@ -8,16 +8,15 @@ import cn.fts.vo.ResponseData;
 import cn.fts.vo.VoFile;
 import com.alibaba.fastjson.JSON;
 import org.apache.log4j.Logger;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -65,22 +64,21 @@ public class FileController {
             synchronized (this) {
                 textFile = FileUtils.generateNewText("/" + UUID.randomUUID().toString().replaceAll("-","") +".txt",content);
             }
-            System.out.println(textFile.getName());
+            logger.debug(textFile.getName());
             file.setjFile(textFile);
-//            prepareBeforeCheck
-//            file.prepareBeforeCheck(file);
 //            check
             fileService.check(file);
 //            prepareAfterCheck
             fileService.prepareAfterCheck(file);
 //            file.setSrcFile();
-            fileService.insert(file);
+            ResponseData<Integer> responseData = fileService.insert(file);
+//            todo 记录操作！！！
             FileUtils.deleteFile(textFile);
             log("fastText","successful",request,file,"");
-            return JSON.toJSONString(new ResponseData<>(0,"操作成功",null));
+            return JSON.toJSONString(responseData);
         } catch (Exception e) {
             log("fastText","failed",request,file,e.getMessage());
-            return JSON.toJSONString(new ResponseData<>(1,"操作失败",null));
+            return JSON.toJSONString(ResponseData.failed());
         }
     }
 
@@ -99,24 +97,21 @@ public class FileController {
         try {
             fileService.check(file);
             fileService.prepareAfterCheck(file);
-            fileService.insert(file);
+            ResponseData responseData = fileService.insert(file);
+//            todo 记录操作！！！
             log("upload","successful",request,file,"");
-            return JSON.toJSONString(new ResponseData<>(0,"操作成功",null));
+            return JSON.toJSONString(responseData);
         } catch (Exception e) {
             log("upload","failed",request,file,e.getMessage());
-            return JSON.toJSONString(new ResponseData<>(1,"操作失败",null));
+            return JSON.toJSONString(ResponseData.failed());
         }
     }
 
     @RequestMapping("/list")
     @ResponseBody
     public String list() {
-        List<VoFile> viewList = fileService.list();
-        if (viewList == null && viewList.size() == 0) {
-            viewList = null;
-        }
-        ResponseData<List<VoFile>> data = new ResponseData(0,"查询成功",viewList);
-        return JSON.toJSONString(data);
+        ResponseData responseData = fileService.list();
+        return JSON.toJSONString(responseData);
     }
 
     @RequestMapping("/download")
@@ -146,5 +141,4 @@ public class FileController {
                 + "\tfileId=" + file.getFileid()
                 + "\tfileSize=" + file.getSize() + another);
     }
-
 }

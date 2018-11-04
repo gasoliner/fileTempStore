@@ -1,6 +1,7 @@
 package cn.fts.service;
 
 import cn.fts.po.File;
+import cn.fts.vo.ResponseData;
 import cn.fts.vo.VoFile;
 
 import java.io.IOException;
@@ -8,19 +9,15 @@ import java.util.List;
 
 public interface FileService {
 
-    boolean checkVoFile(VoFile file);
+    ResponseData<Integer> insert(VoFile file);
 
-    int insert(VoFile file);
-
-    List<File> select();
-
-    File selectByPrimaryKey(String id);
+    VoFile selectByPrimaryKey(String fileId);
 
     int deleteBatchByPrimaryKey(List<String> idList);
 
-    List<VoFile> list();
+    ResponseData<List<VoFile>> list();
 
-    int deleteByPrimaryKey(String id);
+    ResponseData<String> deleteByPrimaryKey(String id);
 
     void check (VoFile file) throws Exception;
 

@@ -5,6 +5,11 @@ package cn.fts.vo;
  */
 public class ResponseData<T> {
 
+    /**
+     * 0 成功
+     * 1 失败
+     * 2 异常
+     */
     private int state = 0;
 
     private String message = "";
@@ -18,6 +23,22 @@ public class ResponseData<T> {
         this.state = state;
         this.message = message;
         this.data = data;
+    }
+
+    public static <T> ResponseData success() {
+        return success(null);
+    }
+
+    public static <T> ResponseData success(T data) {
+        return new ResponseData(0,"操作成功",data);
+    }
+
+    public static <T> ResponseData failed() {
+        return failed(null);
+    }
+
+    public static <T> ResponseData failed(T data) {
+        return new ResponseData(1,"操作失败",data);
     }
 
     public int getState() {

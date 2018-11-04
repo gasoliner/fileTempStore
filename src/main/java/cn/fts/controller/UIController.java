@@ -17,16 +17,16 @@ import java.io.IOException;
 @Controller
 public class UIController {
 
-    private boolean timeTaskIsRunning = false;
-    private TimeTask timeTask;
+//    private boolean timeTaskIsRunning = false;
+//    private TimeTask timeTask;
 
     @RequestMapping("/")
-    public String showIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (!timeTaskIsRunning) {
-            timeTask = new TimeTask();
-            timeTask.start();
-            timeTaskIsRunning = true;
-        }
+    public String showIndex(HttpServletRequest request, HttpServletResponse response) {
+//        if (!timeTaskIsRunning) {
+//            timeTask = new TimeTask();
+//            timeTask.start();
+//            timeTaskIsRunning = true;
+//        }
         return "index";
     }
 

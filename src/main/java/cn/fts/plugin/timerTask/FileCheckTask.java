@@ -29,18 +29,18 @@ public class FileCheckTask extends TimerTask {
     }
 
     public void run() {
-        if (!isRunning) {
-            isRunning = true;
-            checkCount++;
-            List<File> fileList = fileService.select();
-            List<String> overdueIdList = checkOverdueFile(fileList);
-            if (overdueIdList != null && overdueIdList.size() > 0) {
-                fileService.deleteBatchByPrimaryKey(overdueIdList);
-            }
-            logger.debug("fileCheckTask\tcheckCount=" + checkCount + "\tdeletedFilesID:" + overdueIdList);
-            isRunning = false;
-        } else {
-        }
+//        if (!isRunning) {
+//            isRunning = true;
+//            checkCount++;
+//            List<File> fileList = fileService.select();
+//            List<String> overdueIdList = checkOverdueFile(fileList);
+//            if (overdueIdList != null && overdueIdList.size() > 0) {
+//                fileService.deleteBatchByPrimaryKey(overdueIdList);
+//            }
+//            logger.debug("fileCheckTask\tcheckCount=" + checkCount + "\tdeletedFilesID:" + overdueIdList);
+//            isRunning = false;
+//        } else {
+//        }
     }
 
     private List<String> checkOverdueFile(List<File> fileList) {

@@ -68,6 +68,7 @@ function uploadFile() {
         // headers : {"ClientCallMode" : "ajax"}, //添加请求头部
         success :function (response,statusText) {
             alert(statusText);
+            refreshFileTab();
             // response = $.parseJSON(response);
             // alert(response.message);
         }
@@ -75,7 +76,6 @@ function uploadFile() {
     };
     $("#uploadFileForm").ajaxSubmit(option);
     $("#uploadFileForm").resetForm();
-    refreshFileTab();
 }
 
 function fastText() {
