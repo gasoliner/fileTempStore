@@ -39,12 +39,12 @@ function fillAction(access,fileId) {
     if (access == 2) {
         return "<div class=\"form-inline\"><input id=\"" + fileIdHtml + "\" type=\"text\" class=\"form-control\">" +
             "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class=\"btn btn-success\" onclick=\"downloadFile('" + fileIdHtml + "','" + fileId + "')\">下载</button>&nbsp;&nbsp;" +
-            "<button class=\"btn btn-info\" data-toggle=\"modal\" onclick=\"requestPreview('" + fileIdHtml + "','" + fileId + "')\">预览</button>" +
+            "<button class=\"btn btn-info\" data-toggle=\"modal\" onclick=\"requestPreview('" + fileIdHtml + "','" + fileId + "')\">预览</button>&nbsp;&nbsp;" +
             "<button class=\"btn btn-danger\" data-toggle=\"modal\" onclick=\"deleteFile('" + fileIdHtml + "','" + fileId + "')\">删除</button>" +
             "</div>";
     } else {
         return "<button class=\"btn btn-success\" onclick=\"downloadFile('no','" + fileId + "')\">下载</button>&nbsp;&nbsp;" +
-                   "<button class=\"btn btn-info\" data-toggle=\"modal\" onclick=\"requestPreview('no','" + fileId + "')\">预览</button>" +
+                   "<button class=\"btn btn-info\" data-toggle=\"modal\" onclick=\"requestPreview('no','" + fileId + "')\">预览</button>&nbsp;&nbsp;" +
                    "<button class=\"btn btn-danger\" data-toggle=\"modal\" onclick=\"deleteFile('no','" + fileId + "')\">删除</button>";
     }
 }
