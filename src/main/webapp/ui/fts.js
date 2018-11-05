@@ -37,11 +37,15 @@ function fillAction(access,fileId) {
     fileIdHtml = fileIdHtml.replace(/\./g,"");
     console.log("filehtmlId2 = " + fileIdHtml);
     if (access == 2) {
-        return "<div class=\"form-inline\"><input id=\"" + fileIdHtml + "\" type=\"text\" class=\"form-control\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class=\"btn btn-success\" onclick=\"downloadFile('" + fileIdHtml + "','" + fileId + "')\">下载</button>&nbsp;&nbsp;" +
-            "<button class=\"btn btn-info\" data-toggle=\"modal\" onclick=\"requestPreview('" + fileIdHtml + "','" + fileId + "')\">预览该文件</button></div>";
+        return "<div class=\"form-inline\"><input id=\"" + fileIdHtml + "\" type=\"text\" class=\"form-control\">" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class=\"btn btn-success\" onclick=\"downloadFile('" + fileIdHtml + "','" + fileId + "')\">下载</button>&nbsp;&nbsp;" +
+            "<button class=\"btn btn-info\" data-toggle=\"modal\" onclick=\"requestPreview('" + fileIdHtml + "','" + fileId + "')\">预览</button>" +
+            "<button class=\"btn btn-danger\" data-toggle=\"modal\" onclick=\"deleteFile('" + fileIdHtml + "','" + fileId + "')\">删除</button>" +
+            "</div>";
     } else {
         return "<button class=\"btn btn-success\" onclick=\"downloadFile('no','" + fileId + "')\">下载</button>&nbsp;&nbsp;" +
-                   "<button class=\"btn btn-info\" data-toggle=\"modal\" onclick=\"requestPreview('no','" + fileId + "')\">预览该文件</button>";
+                   "<button class=\"btn btn-info\" data-toggle=\"modal\" onclick=\"requestPreview('no','" + fileId + "')\">预览</button>" +
+                   "<button class=\"btn btn-danger\" data-toggle=\"modal\" onclick=\"deleteFile('no','" + fileId + "')\">删除</button>";
     }
 }
 
@@ -114,6 +118,34 @@ function requestPreview(inputAuthCodeId,id) {
         url = "/file/previewed?fileid=" + id + "&authoricode=" + $("#" + inputAuthCodeId).val();
     } else {
         url = "/file/previewed?fileid=" + id;
+    }
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        url: url,
+        beforeSend:function (){
+            $("#waitModal").modal('show');
+        },
+        success: function (msg) {
+            $("#waitModal").modal('hide');
+
+            var data = msg.data;
+            $("#previewArea").html(data);
+            $("#previewModal").modal('show');
+        },
+        error: function () {
+            $("#waitModal").modal('hide');
+            alert("查询失败");
+        }
+    });
+}
+
+function deleteFile(inputAuthCodeId,id) {
+    var url;
+    if (inputAuthCodeId != 'no') {
+        url = "/file/delete?fileid=" + id + "&authoricode=" + $("#" + inputAuthCodeId).val();
+    } else {
+        url = "/file/delete?fileid=" + id;
     }
     $.ajax({
         type: "GET",

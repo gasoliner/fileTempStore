@@ -128,7 +128,8 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public ResponseData<String> deleteByPrimaryKey(String id) {
-        logger.info("FileServiceImpl.deleteByPrimaryKey id = " + id);
+//        todo 操作记录！！！
+        logger.info("FileServiceImpl.deleteByPrimaryKey start... id = " + id);
         String key = REDIS_FTS_FILE_PREFIX + id;
         try {
             redisCacheManager.del(key);

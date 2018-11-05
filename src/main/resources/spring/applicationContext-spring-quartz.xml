@@ -27,7 +27,7 @@
         <!-- 每隔三十分钟运行 -->
         <!--<property name="cronExpression" value="0 0/30 * * * ?"></property>-->
         <!-- 每分钟运行 -->
-        <!--<property name="cronExpression" value="0 0/1 * * * ? "></property>-->
+        <!--<property name="cronExpression" value="0 0/2 * * * ? "></property>-->
     </bean>
 
     <!-- ======================== 调度工厂 ======================== -->

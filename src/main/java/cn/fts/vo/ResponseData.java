@@ -41,6 +41,10 @@ public class ResponseData<T> {
         return new ResponseData(1,"操作失败",data);
     }
 
+    public static <T> ResponseData exception() {
+        return new ResponseData(2,"运行异常",null);
+    }
+
     public int getState() {
         return state;
     }

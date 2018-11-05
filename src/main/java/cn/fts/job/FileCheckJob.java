@@ -1,5 +1,7 @@
 package cn.fts.job;
 
+import cn.fts.po.ActionHelper;
+import cn.fts.service.ActionService;
 import cn.fts.service.impl.FileServiceImpl;
 import cn.fts.utils.FastDFSClient;
 import cn.fts.utils.RedisCacheManager;
@@ -21,6 +23,9 @@ public class FileCheckJob {
     @Autowired
     RedisCacheManager redisCacheManager;
 
+    @Autowired
+    ActionService actionService;
+
     public void run() {
         logger.info("fileCheckJob start...");
         long current = System.currentTimeMillis();
@@ -39,7 +44,9 @@ public class FileCheckJob {
             redisCacheManager.setRemove(keySetPrefix,key);
             FastDFSClient.deleteFile(key.substring(preFixLen));
         }
-        logger.info("fileCheckJob check completely! cost " + (System.currentTimeMillis() - current) + " millisecond, " + allKeys.size() + " files's entities was removed . removedFileId:" + JSON.toJSONString(allKeys));
+        String log = "fileCheckJob check completely! cost " + (System.currentTimeMillis() - current) + " millisecond, " + allKeys.size() + " files's entities was removed . removedFileId:" + JSON.toJSONString(allKeys);
+        logger.info(log);
+        actionService.insert(ActionHelper.deleteSysMultiSuccess(log));
     }
 
 }

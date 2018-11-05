@@ -1,7 +1,9 @@
 package cn.fts.controller;
 
+import cn.fts.po.ActionHelper;
 import cn.fts.po.File;
 import cn.fts.preview.PreviewProcessor;
+import cn.fts.service.ActionService;
 import cn.fts.service.FileService;
 import cn.fts.utils.*;
 import cn.fts.vo.ResponseData;
@@ -17,8 +19,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -30,14 +30,20 @@ public class FileController {
     @Autowired
     FileService fileService;
 
+    @Autowired
+    ActionService actionService;
+
     @RequestMapping("/previewed")
     @ResponseBody
-    public String previewed(String fileid,String authoricode) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+    public String previewed(String fileid,String authoricode,HttpServletRequest request) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+        ResponseData<String> response = null;
         VoFile file = fileService.selectByPrimaryKey(fileid);
         boolean flag = true;
         if (file.getAccess() == 2) {
             if (!file.getAuthoricode().equals(authoricode)) {
                 flag = false;
+                response = ResponseData.failed("权限校验失败");
+                actionService.insert(ActionHelper.previewUserFailed(fileid,authoricode + "dog  权限校验失败",RequestUtils.getRemoteAddr(request)));
             }
         }
         if (flag) {
@@ -45,11 +51,15 @@ public class FileController {
             if (supportPreviewProcessor != null) {
                 PreviewProcessor processor = (PreviewProcessor)Class.forName("cn.fts.preview.impl." + supportPreviewProcessor +"PreviewProcessor").newInstance();
                 String result = processor.previewed(fileid);
-                return JSON.toJSONString(new ResponseData<>(0,"操作成功",result));
+                response = ResponseData.success(result);
+                actionService.insert(ActionHelper.previewUserSuccess(fileid,authoricode + "dog 用户预览成功",RequestUtils.getRemoteAddr(request)));
+            } else {
+                response = ResponseData.failed("格式不支持预览");
+                actionService.insert(ActionHelper.previewUserFailed(fileid,authoricode + "dog  格式不支持",RequestUtils.getRemoteAddr(request)));
             }
         }
 
-        return JSON.toJSONString(new ResponseData<>(1,"操作失败","预览失败，可能是该文件暂不支持预览或者权限校验未通过"));
+        return JSON.toJSONString(response);
     }
 
     @RequestMapping("/fastText")
@@ -74,12 +84,16 @@ public class FileController {
             fileService.prepareAfterCheck(file);
 //            file.setSrcFile();
             ResponseData<Integer> responseData = fileService.insert(file);
-//            todo 记录操作！！！
             FileUtils.deleteFile(textFile);
-            log("fastText","successful",request,file,"");
+
+            log("快速文本","successful",request,file,"");
+            actionService.insert(ActionHelper.addUserFTextSuccess(file.getFileid(),file.getAuthoricode() + "dog" +content.substring(0,content.length() > 300?300:content.length()),RequestUtils.getRemoteAddr(request)));
+
             return JSON.toJSONString(responseData);
         } catch (Exception e) {
-            log("fastText","failed",request,file,e.getMessage());
+            log("快速文本","failed",request,file,e.getMessage());
+            actionService.insert(ActionHelper.addUserFTextFailed(file.getFileid(),file.getAuthoricode() + "dog" +content.substring(0,content.length() > 300?300:content.length()),RequestUtils.getRemoteAddr(request)));
+
             return JSON.toJSONString(ResponseData.failed());
         }
     }
@@ -100,11 +114,12 @@ public class FileController {
             fileService.check(file);
             fileService.prepareAfterCheck(file);
             ResponseData responseData = fileService.insert(file);
-//            todo 记录操作！！！
             log("upload","successful",request,file,"");
+            actionService.insert(ActionHelper.addUserUploadSuccess(file.getFileid(),file.getAuthoricode() + "dog" ,RequestUtils.getRemoteAddr(request)));
             return JSON.toJSONString(responseData);
         } catch (Exception e) {
             log("upload","failed",request,file,e.getMessage());
+            actionService.insert(ActionHelper.addUserUploadFailed(file.getFileid(),file.getAuthoricode() + "dog" ,RequestUtils.getRemoteAddr(request)));
             return JSON.toJSONString(ResponseData.failed());
         }
     }
@@ -132,7 +147,30 @@ public class FileController {
             PageUtil.settingResponseForDownLoad(file.getName(),request,response);
             FastDFSClient.downloadFile(fileId,response.getOutputStream());
             log("download","success",request,file,"");
+            actionService.insert(ActionHelper.downloadUserSuccess(fileId,authoricode + "dog" ,RequestUtils.getRemoteAddr(request)));
+        } else {
+            actionService.insert(ActionHelper.downloadUserFailed(fileId,authoricode + "dog" ,RequestUtils.getRemoteAddr(request)));
         }
+    }
+
+    @RequestMapping("/delete")
+    @ResponseBody
+    public String deleteFile(String fileid,String authoricode,HttpServletRequest request) {
+        ResponseData responseData;
+        VoFile voFile = fileService.selectByPrimaryKey(fileid);
+        if (voFile != null) {
+            if (voFile.getAccess() == 2 && voFile.getAuthoricode().equals(authoricode)) {
+                responseData = fileService.deleteByPrimaryKey(fileid);
+                actionService.insert(ActionHelper.deleteUserSuccess(fileid,authoricode + "dog" + "文件删除成功" ,RequestUtils.getRemoteAddr(request)));
+            } else {
+                responseData = ResponseData.failed("权限校验环节出现了问题！");
+                actionService.insert(ActionHelper.deleteUserFailed(fileid,authoricode + "dog" + "权限校验环节出现了问题" ,RequestUtils.getRemoteAddr(request)));
+            }
+        } else {
+            responseData = ResponseData.failed("文件不存在！");
+            actionService.insert(ActionHelper.deleteUserFailed(fileid,authoricode + "dog" + "文件不存在" ,RequestUtils.getRemoteAddr(request)));
+        }
+        return JSON.toJSONString(responseData);
     }
 
     private void log(String action,String isSuccess,HttpServletRequest request,File file,String another) {
