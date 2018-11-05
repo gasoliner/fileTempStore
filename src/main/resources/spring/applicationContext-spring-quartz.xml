@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cache="http://www.springframework.org/schema/cache"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd"
+       >
+
+    <bean id="fileCheck" class="cn.fts.job.FileCheckJob"></bean>
+
+    <bean id="fileCheckMethod" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="fileCheck"/>
+        </property>
+        <property name="targetMethod">
+            <value>run</value>
+        </property>
+        <property name="concurrent" value="false" />
+    </bean>
+
+    <!-- ======================== 调度触发器 ======================== -->
+
+
+    <bean id="fileCheckTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="fileCheckMethod"></property>
+        <!-- 每天2点运行 -->
+        <property name="cronExpression" value="0 0 2 * * ? "></property>
+        <!-- 每隔三十分钟运行 -->
+        <!--<property name="cronExpression" value="0 0/30 * * * ?"></property>-->
+        <!-- 每分钟运行 -->
+        <!--<property name="cronExpression" value="0 0/1 * * * ? "></property>-->
+    </bean>
+
+    <!-- ======================== 调度工厂 ======================== -->
+    <bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="fileCheckTrigger"/>
+            </list>
+        </property>
+    </bean>
+
+</beans>

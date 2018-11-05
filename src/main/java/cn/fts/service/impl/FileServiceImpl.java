@@ -1,6 +1,5 @@
 package cn.fts.service.impl;
 
-import cn.fts.po.File;
 import cn.fts.service.FileService;
 import cn.fts.utils.*;
 import cn.fts.vo.ResponseData;
@@ -20,7 +19,9 @@ public class FileServiceImpl implements FileService {
 
     private static final Logger logger = Logger.getLogger(FileServiceImpl.class);
 
-    private static final String REDIS_FTS_FILE_PREFIX = "fts:file:";
+    public static final String REDIS_FTS_FILE_PREFIX = "fts:file:";
+
+    public static final String REDIS_FTS_KEY_SET_PREFIX = "fts:key-set";
 
     private static final double MULTI_SIZE = 10;
 
@@ -31,7 +32,9 @@ public class FileServiceImpl implements FileService {
         ResponseData<Integer> res;
         String key = REDIS_FTS_FILE_PREFIX + file.getFileid();
         try {
+//            todo redis事务
             redisCacheManager.set(key, JSON.toJSONString(file), file.getKeep() * 60);
+            redisCacheManager.sSet(REDIS_FTS_KEY_SET_PREFIX, key);
             res = ResponseData.success();
         } catch (Throwable t) {
             logger.error("fileServiceImpl.insert error ", t);
@@ -52,17 +55,20 @@ public class FileServiceImpl implements FileService {
         }
     }
 
-    public int deleteBatchByPrimaryKey(List<String> idList) {
-//        System.out.println(TimeUtils.dateToString() + "deleteBatchByPrimaryKey idList \t" + idList);
-//        FileExample example = new FileExample();
-//        for (String id:
-//                idList) {
-//            if (deleteFileEntry(id) >= 0) {
-//                example.or().andFileidEqualTo(id);
-//            }
-//        }
-//        fileMapper.deleteByExample(example);
-        return 0;
+    public boolean deleteBatchByPrimaryKey(List<String> idList) {
+        logger.info("FileServiceImpl.deleteBatchByPrimaryKey idList " + JSON.toJSONString(idList));
+//        todo 记录操作！！！
+        for (int i = 0; i < idList.size(); i++) {
+            String id = idList.get(i);
+            idList.set(i,REDIS_FTS_FILE_PREFIX + id);
+        }
+        try {
+            redisCacheManager.del(idList);
+            return true;
+        } catch (Throwable t) {
+            logger.error("FileServiceImpl.deleteBatchByPrimaryKey redis.del(list) cache an error ",t);
+            return false;
+        }
     }
 
     @Override
@@ -77,7 +83,6 @@ public class FileServiceImpl implements FileService {
         }
         if (CollectionUtils.isNotEmpty(keys)) {
             fileList = new ArrayList<>(keys.size());
-//            int n = (int) Math.ceil(keys.size()/MULTI_SIZE);
             Iterator<String> keySetIteartor = keys.iterator();
 //            单个查询
             while (keySetIteartor.hasNext()) {
@@ -95,6 +100,7 @@ public class FileServiceImpl implements FileService {
                 fileList.add(vo(voFile));
             }
 //            批量查询
+//            int n = (int) Math.ceil(keys.size()/MULTI_SIZE);
 //            List<String> keyList;
 //            for (int i = 0; i < n; i++) {
 //                keyList = new ArrayList((int) MULTI_SIZE);
@@ -123,8 +129,10 @@ public class FileServiceImpl implements FileService {
     @Override
     public ResponseData<String> deleteByPrimaryKey(String id) {
         logger.info("FileServiceImpl.deleteByPrimaryKey id = " + id);
+        String key = REDIS_FTS_FILE_PREFIX + id;
         try {
-            redisCacheManager.del(REDIS_FTS_FILE_PREFIX + id);
+            redisCacheManager.del(key);
+            redisCacheManager.setRemove(REDIS_FTS_KEY_SET_PREFIX,key);
             return ResponseData.success();
         } catch (Throwable t) {
             return ResponseData.failed();
@@ -159,6 +167,7 @@ public class FileServiceImpl implements FileService {
         long ex = start.getTime() + keep*60*1000;
         Date expirationTime = new Date(ex);
         long size = 0;
+        String fileId = "";
         if ("fastText".equals(file.getCurrentFileKind())) {
             if (StringUtils.isEmpty(file.getName())) {
                 file.setName(file.getjFile().getName());
@@ -166,14 +175,15 @@ public class FileServiceImpl implements FileService {
                 file.setName(file.getName() + ".txt");
             }
             size = file.getjFile().length();
-            file.setFileid(FastDFSClient.uploadFile(file.getjFile(), file.getName()));
+            fileId = FastDFSClient.uploadFile(file.getjFile(), file.getName());
         } else if ("uploadFile".equals(file.getCurrentFileKind())) {
             if (StringUtils.isEmpty(file.getName())) {
                 file.setName(file.getSrcFile().getOriginalFilename());
             }
             size = file.getSrcFile().getSize();
-            file.setFileid(FastDFSClient.uploadFile(file.getSrcFile().getInputStream(), file.getName()));
+            fileId = FastDFSClient.uploadFile(file.getSrcFile().getInputStream(), file.getName());
         }
+        file.setFileid(fileId);
         file.setSize(size);
         file.setKeep(keep);
         file.setStart(start);

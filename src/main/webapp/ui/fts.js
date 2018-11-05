@@ -31,6 +31,20 @@ function downloadFile(inputAuthCodeId,fileId) {
     }
 }
 
+function fillAction(access,fileId) {
+    var fileIdHtml = fileId.replace(/\//g, "");
+    console.log("fileHtmlId1 = " + fileIdHtml);
+    fileIdHtml = fileIdHtml.replace(/\./g,"");
+    console.log("filehtmlId2 = " + fileIdHtml);
+    if (access == 2) {
+        return "<div class=\"form-inline\"><input id=\"" + fileIdHtml + "\" type=\"text\" class=\"form-control\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class=\"btn btn-success\" onclick=\"downloadFile('" + fileIdHtml + "','" + fileId + "')\">下载</button>&nbsp;&nbsp;" +
+            "<button class=\"btn btn-info\" data-toggle=\"modal\" onclick=\"requestPreview('" + fileIdHtml + "','" + fileId + "')\">预览该文件</button></div>";
+    } else {
+        return "<button class=\"btn btn-success\" onclick=\"downloadFile('no','" + fileId + "')\">下载</button>&nbsp;&nbsp;" +
+                   "<button class=\"btn btn-info\" data-toggle=\"modal\" onclick=\"requestPreview('no','" + fileId + "')\">预览该文件</button>";
+    }
+}
+
 function refreshFileTab() {
     $.ajax({
         type: "GET",
@@ -48,7 +62,7 @@ function refreshFileTab() {
                         "<td>" + data[i].expirationTime + "</td>" +
                         "<td>" + data[i].day + " 天 " + data[i].hour + " 小时 " + data[i].minute + " 分钟 " + "</td>" +
                         "<td>" + data[i].access + "</td>" +
-                        "<td>" + data[i].action + "</td>" +
+                        "<td>" + fillAction(data[i].access,data[i].fileid) + "</td>" +
                         "</tr>";
                 }
                 $("#fileTbody").html(str);
@@ -68,6 +82,7 @@ function uploadFile() {
         // headers : {"ClientCallMode" : "ajax"}, //添加请求头部
         success :function (response,statusText) {
             alert(statusText);
+            $("#uploadFileForm").resetForm();
             refreshFileTab();
             // response = $.parseJSON(response);
             // alert(response.message);
@@ -75,7 +90,7 @@ function uploadFile() {
         // error:showResponse()
     };
     $("#uploadFileForm").ajaxSubmit(option);
-    $("#uploadFileForm").resetForm();
+
 }
 
 function fastText() {

@@ -1,6 +1,5 @@
 package cn.fts.service;
 
-import cn.fts.po.File;
 import cn.fts.vo.ResponseData;
 import cn.fts.vo.VoFile;
 
@@ -13,7 +12,7 @@ public interface FileService {
 
     VoFile selectByPrimaryKey(String fileId);
 
-    int deleteBatchByPrimaryKey(List<String> idList);
+    boolean deleteBatchByPrimaryKey(List<String> idList);
 
     ResponseData<List<VoFile>> list();
 

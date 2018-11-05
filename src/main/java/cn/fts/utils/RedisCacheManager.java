@@ -110,6 +110,19 @@ public class RedisCacheManager {
         }
     }
 
+    /**
+     * 删除缓存-List版
+     *
+     * @param keyList
+     *            可以传一个值 或多个
+     */
+    @SuppressWarnings("unchecked")
+    public void del(List<String> keyList) {
+        if (!CollectionUtils.isEmpty(keyList)) {
+            redisTemplate.delete(keyList);
+        }
+    }
+
     // ============================String=============================
     /**
      * 普通缓存获取
@@ -458,7 +471,7 @@ public class RedisCacheManager {
     }
 
     /**
-     * 移除值为value的
+     * 移除Set缓存中值为value的元素
      *
      * @param key
      *            键

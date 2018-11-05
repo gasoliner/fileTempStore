@@ -19,8 +19,10 @@ public class VoFile extends File {
 
     private String action;
 
+    @JSONField(serialize = false)
     private CommonsMultipartFile srcFile;
 
+    @JSONField(serialize = false)
     private java.io.File jFile;
 
     private String currentFileKind;

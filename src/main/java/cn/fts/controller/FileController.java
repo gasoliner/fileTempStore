@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -31,7 +33,7 @@ public class FileController {
     @RequestMapping("/previewed")
     @ResponseBody
     public String previewed(String fileid,String authoricode) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
-        File file = fileService.selectByPrimaryKey(fileid);
+        VoFile file = fileService.selectByPrimaryKey(fileid);
         boolean flag = true;
         if (file.getAccess() == 2) {
             if (!file.getAuthoricode().equals(authoricode)) {
@@ -141,4 +143,5 @@ public class FileController {
                 + "\tfileId=" + file.getFileid()
                 + "\tfileSize=" + file.getSize() + another);
     }
+
 }
